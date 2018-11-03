@@ -1,0 +1,88 @@
+#######################################
+# Syntax Coloring Map For Teensy XInput
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+# Library
+XInput	KEYWORD1
+
+# Classes
+XInputGamepad	KEYWORD1
+
+# Enums
+XInputControl	KEYWORD1
+XInputLEDPattern	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+# Set Control Data
+press	KEYWORD2
+release	KEYWORD2
+
+setButton	KEYWORD2
+setDpad	KEYWORD2
+setTrigger	KEYWORD2
+setJoystick	KEYWORD2
+
+# Receive data
+getPlayer	KEYWORD2
+getRumble	KEYWORD2
+getRumbleLeft	KEYWORD2
+getRumbleRight	KEYWORD2
+
+getLEDPatternID	KEYWORD2
+getLEDPatternID	KEYWORD2
+
+# USB I/O
+send	KEYWORD2
+receive	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+# XInput Controls
+BUTTON_A	LITERAL1
+BUTTON_B	LITERAL1
+BUTTON_X	LITERAL1
+BUTTON_Y	LITERAL1
+BUTTON_LB	LITERAL1
+BUTTON_RB	LITERAL1
+BUTTON_L3	LITERAL1
+BUTTON_R3	LITERAL1
+BUTTON_START	LITERAL1
+BUTTON_BACK	LITERAL1
+BUTTON_LOGO	LITERAL1
+DPAD_UP	LITERAL1
+DPAD_DOWN	LITERAL1
+DPAD_LEFT	LITERAL1
+DPAD_RIGHT	LITERAL1
+TRIGGER_LEFT	LITERAL1
+TRIGGER_RIGHT	LITERAL1
+JOY_LEFT	LITERAL1
+JOY_RIGHT	LITERAL1
+
+# LED Patterns
+Off	LITERAL1
+Blinking	LITERAL1
+Flash1	LITERAL1
+Flash2	LITERAL1
+Flash3	LITERAL1
+Flash4	LITERAL1
+On1	LITERAL1
+On2	LITERAL1
+On3	LITERAL1
+On4	LITERAL1
+Rotating	LITERAL1
+BlinkOnce	LITERAL1
+BlinkSlow	LITERAL1
+Alternating	LITERAL1
