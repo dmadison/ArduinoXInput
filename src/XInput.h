@@ -99,7 +99,10 @@ public:
 	// USB IO
 	void send();
 	void receive();
-		
+
+	// Other
+	void reset();
+
 private:
 	static const uint32_t USB_Timeout = 12840;  // Packet timeout, in milliseconds
 	uint8_t tx[20];  // USB transmit data

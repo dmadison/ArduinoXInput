@@ -151,8 +151,7 @@ static const XInputMap_Rumble RumbleRight(4, 1);  // Small motor
 XInputGamepad::XInputGamepad() :
 	tx(), rumble() // Zero initialize arrays
 {
-	tx[0] = 0x00;  // Message type
-	tx[1] = 0x14;  // Packet size
+	reset();
 }
 
 void XInputGamepad::press(XInputControl button) {
@@ -282,6 +281,17 @@ void XInputGamepad::parseLED(uint8_t leds) {
 	else {
 		return;  // Pattern doesn't affect player #
 	}
+}
+
+// Resets class back to initial values
+void XInputGamepad::reset() {
+	releaseAll();  // Clear TX buffer
+	tx[0] = 0x00;  // Set tx message type
+	tx[1] = 0x14;  // Set tx packet size (20)
+
+	player = 0;  // Not connected, no player
+	memset(rumble, 0x00, sizeof(rumble));  // Clear rumble values
+	ledPattern = XInputLEDPattern::Off;  // No LEDs on
 }
 
 XInputGamepad XInput;
