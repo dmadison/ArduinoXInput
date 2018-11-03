@@ -174,13 +174,15 @@ void XInputGamepad::setButton(XInputControl button, boolean state) {
 	}
 }
 
-// To-do: add SOCD cleaner
 void XInputGamepad::setDpad(XInputControl pad, boolean state) {
 	setButton(pad, state);
 }
 
-
 void XInputGamepad::setDpad(boolean up, boolean down, boolean left, boolean right) {
+	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
+	if (up && down) { down = false; }  // Up + Down = Up
+	if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+
 	setDpad(DPAD_UP, up);
 	setDpad(DPAD_DOWN, down);
 	setDpad(DPAD_LEFT, left);
