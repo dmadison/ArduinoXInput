@@ -206,6 +206,11 @@ void XInputGamepad::setJoystick(XInputControl joy, int16_t x, int16_t y) {
 	tx[joyData->y_high] = highByte(y);
 }
 
+void XInputGamepad::releaseAll() {
+	const uint8_t offset = 2;  // Skip message type and packet size
+	memset(tx + offset, 0x00, sizeof(tx) - offset);  // Clear TX array
+}
+
 uint8_t XInputGamepad::getPlayer() const {
 	return player;
 }
