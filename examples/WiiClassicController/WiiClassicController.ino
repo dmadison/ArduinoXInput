@@ -36,6 +36,11 @@ ClassicController classic;
 void setup() {
 	classic.begin();
 
+	XInput.setTriggerRange(2, 28);
+
+	XInput.setRange(JOY_LEFT, 8, 56);
+	XInput.setRange(JOY_RIGHT, 4, 28);
+
 	while (!classic.connect()) {
 		delay(1000);  // Controller not connected
 	}
@@ -43,8 +48,8 @@ void setup() {
 
 void loop() {
 	if(classic.update()) {  // Get new data!
-		XInput.setJoystick(JOY_LEFT, map((classic.leftJoyX() << 2), 0, 255, -32768, 32767), map((classic.leftJoyY() << 2), 0, 255, -32768, 32767));
-		XInput.setJoystick(JOY_RIGHT, map((classic.rightJoyX() << 3), 0, 255, -32768, 32767), map((classic.rightJoyY() << 3), 0, 255, -32768, 32767));
+		XInput.setJoystick(JOY_LEFT, classic.leftJoyX(), classic.leftJoyY());
+		XInput.setJoystick(JOY_RIGHT, classic.rightJoyX(), classic.rightJoyY());
 
 		XInput.setButton(BUTTON_A, classic.buttonB());
 		XInput.setButton(BUTTON_B, classic.buttonA());
@@ -57,19 +62,20 @@ void loop() {
 
 		XInput.setDpad(classic.dpadUp(), classic.dpadDown(), classic.dpadLeft(), classic.dpadRight());
 
-		XInput.setTrigger(TRIGGER_LEFT, classic.triggerL() << 3);
-		XInput.setTrigger(TRIGGER_RIGHT, classic.triggerR() << 3);
+		XInput.setTrigger(TRIGGER_LEFT, classic.triggerL());
+		XInput.setTrigger(TRIGGER_RIGHT, classic.triggerR());
 
 		XInput.setButton(BUTTON_LB, classic.buttonZL());
 		XInput.setButton(BUTTON_RB, classic.buttonZR());
 
 		// XInput.setButton(BUTTON_L3, classic.buttonZL());  // The Classic Controller doesn't have L3 and R3
 		// XInput.setButton(BUTTON_R3, classic.buttonZR());  // but you can uncomment these to check that they work
-
-		XInput.send();
-		XInput.receive();
 	}
 	else {  // Data is bad :(
+		XInput.releaseAll();
 		classic.reconnect();
 	}
+
+	XInput.send();
+	XInput.receive();
 }
