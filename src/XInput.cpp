@@ -73,7 +73,9 @@ constexpr const XInputMap_Button * getButtonFromEnum(XInputControl ctrl) {
 	case(BUTTON_Y):     return &Map_ButtonY;
 	case(BUTTON_LB):    return &Map_ButtonLB;
 	case(BUTTON_RB):    return &Map_ButtonRB;
+	case(JOY_LEFT):
 	case(BUTTON_L3):    return &Map_ButtonL3;
+	case(JOY_RIGHT):
 	case(BUTTON_R3):    return &Map_ButtonR3;
 	case(BUTTON_START): return &Map_ButtonStart;
 	case(BUTTON_BACK):  return &Map_ButtonBack;
