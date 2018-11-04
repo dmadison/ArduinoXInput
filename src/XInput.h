@@ -81,9 +81,9 @@ public:
 	void setDpad(XInputControl pad, boolean state);
 	void setDpad(boolean up, boolean down, boolean left, boolean right);
 
-	void setTrigger(XInputControl trigger, uint8_t val);
+	void setTrigger(XInputControl trigger, int32_t val);
 
-	void setJoystick(XInputControl joy, int16_t x, int16_t y);
+	void setJoystick(XInputControl joy, int32_t x, int32_t y);
 
 	void releaseAll();
 
@@ -100,7 +100,14 @@ public:
 	void send();
 	void receive();
 
-	// Other
+	// Control Input Ranges
+	struct Range { int32_t min; int32_t max; };
+
+	void setTriggerRange(int32_t rangeMin, int32_t rangeMax);
+	void setJoystickRange(int32_t rangeMin, int32_t rangeMax);
+	void setRange(XInputControl ctrl, int32_t rangeMin, int32_t rangeMax);
+
+	// Setup
 	void reset();
 
 private:
@@ -112,6 +119,15 @@ private:
 	XInputLEDPattern ledPattern;  // LED pattern data in, buffered
 
 	void parseLED(uint8_t leds);  // Parse LED data and set pattern/player data
+
+	// Control Input Ranges
+	Range rangeTrigLeft;
+	Range rangeTrigRight;
+	Range rangeJoyLeft;
+	Range rangeJoyRight;
+
+	Range * getRangeFromEnum(XInputControl ctrl);
+	int32_t rescaleInput(int32_t val, Range in, Range out);
 };
 
 extern XInputGamepad XInput;
