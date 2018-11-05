@@ -121,11 +121,7 @@ private:
 	void parseLED(uint8_t leds);  // Parse LED data and set pattern/player data
 
 	// Control Input Ranges
-	Range rangeTrigLeft;
-	Range rangeTrigRight;
-	Range rangeJoyLeft;
-	Range rangeJoyRight;
-
+	Range rangeTrigLeft, rangeTrigRight, rangeJoyLeft, rangeJoyRight;
 	Range * getRangeFromEnum(XInputControl ctrl);
 	int32_t rescaleInput(int32_t val, Range in, Range out);
 };
