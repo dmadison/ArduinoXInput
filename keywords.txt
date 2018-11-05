@@ -44,6 +44,11 @@ getLEDPatternID	KEYWORD2
 send	KEYWORD2
 receive	KEYWORD2
 
+# Input Ranges
+setTriggerRange	KEYWORD2
+setJoystickRange	KEYWORD2
+setRange	KEYWORD2
+
 # Other
 reset	KEYWORD2
 
