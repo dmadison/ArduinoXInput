@@ -81,9 +81,11 @@ public:
 	void setDpad(XInputControl pad, boolean state);
 	void setDpad(boolean up, boolean down, boolean left, boolean right);
 
-	void setTrigger(XInputControl trigger, uint8_t val);
+	void setTrigger(XInputControl trigger, int32_t val);
 
-	void setJoystick(XInputControl joy, int16_t x, int16_t y);
+	void setJoystick(XInputControl joy, int32_t x, int32_t y);
+
+	void releaseAll();
 
 	// Received Data
 	uint8_t getPlayer() const;  // Player # assigned to the controller (0 is unassigned)
@@ -97,7 +99,17 @@ public:
 	// USB IO
 	void send();
 	void receive();
-		
+
+	// Control Input Ranges
+	struct Range { int32_t min; int32_t max; };
+
+	void setTriggerRange(int32_t rangeMin, int32_t rangeMax);
+	void setJoystickRange(int32_t rangeMin, int32_t rangeMax);
+	void setRange(XInputControl ctrl, int32_t rangeMin, int32_t rangeMax);
+
+	// Setup
+	void reset();
+
 private:
 	static const uint32_t USB_Timeout = 12840;  // Packet timeout, in milliseconds
 	uint8_t tx[20];  // USB transmit data
@@ -107,6 +119,11 @@ private:
 	XInputLEDPattern ledPattern;  // LED pattern data in, buffered
 
 	void parseLED(uint8_t leds);  // Parse LED data and set pattern/player data
+
+	// Control Input Ranges
+	Range rangeTrigLeft, rangeTrigRight, rangeJoyLeft, rangeJoyRight;
+	Range * getRangeFromEnum(XInputControl ctrl);
+	int32_t rescaleInput(int32_t val, Range in, Range out);
 };
 
 extern XInputGamepad XInput;

@@ -29,6 +29,8 @@ setDpad	KEYWORD2
 setTrigger	KEYWORD2
 setJoystick	KEYWORD2
 
+releaseAll	KEYWORD2
+
 # Receive data
 getPlayer	KEYWORD2
 getRumble	KEYWORD2
@@ -41,6 +43,14 @@ getLEDPatternID	KEYWORD2
 # USB I/O
 send	KEYWORD2
 receive	KEYWORD2
+
+# Input Ranges
+setTriggerRange	KEYWORD2
+setJoystickRange	KEYWORD2
+setRange	KEYWORD2
+
+# Other
+reset	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
