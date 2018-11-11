@@ -198,8 +198,11 @@ void XInputGamepad::release(XInputControl button) {
 void XInputGamepad::setButton(XInputControl button, boolean state) {
 	const XInputMap_Button * buttonData = getButtonFromEnum(button);
 	if (buttonData != nullptr) {
+		if (getButton(button) == state) return;  // Button hasn't changed
+
 		if (state) { tx[buttonData->index] |= buttonData->mask; }  // Press
 		else { tx[buttonData->index] &= ~(buttonData->mask); }  // Release
+		newData = true;
 	}
 	else {
 		Range * triggerRange = getRangeFromEnum(button);
@@ -226,8 +229,12 @@ void XInputGamepad::setDpad(boolean up, boolean down, boolean left, boolean righ
 void XInputGamepad::setTrigger(XInputControl trigger, int32_t val) {
 	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
 	if (triggerData == nullptr) return;  // Not a trigger
+
 	val = rescaleInput(val, *getRangeFromEnum(trigger), triggerData->range);
+	if (getTrigger(trigger) == val) return;  // Trigger hasn't changed
+
 	tx[triggerData->index] = val;
+	newData = true;
 }
 
 void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
@@ -237,16 +244,21 @@ void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	x = rescaleInput(x, *getRangeFromEnum(joy), joyData->range);
 	y = rescaleInput(y, *getRangeFromEnum(joy), joyData->range);
 
+	if (getJoystickX(joy) == x && getJoystickY(joy) == y) return;  // Joy hasn't changed
+
 	tx[joyData->x_low]  = lowByte(x);
 	tx[joyData->x_high] = highByte(x);
 
 	tx[joyData->y_low]  = lowByte(y);
 	tx[joyData->y_high] = highByte(y);
+
+	newData = true;
 }
 
 void XInputGamepad::releaseAll() {
 	const uint8_t offset = 2;  // Skip message type and packet size
 	memset(tx + offset, 0x00, sizeof(tx) - offset);  // Clear TX array
+	newData = true;  // Data changed and is unsent
 }
 
 boolean XInputGamepad::getButton(XInputControl button) {
@@ -303,7 +315,9 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 
 //Send an update packet to the PC
 void XInputGamepad::send() {
+	if (!newData) return;  // TX data hasn't changed
 	XInputUSB.send(tx, USB_Timeout);
+	newData = false;
 }
 
 void XInputGamepad::receive() {
