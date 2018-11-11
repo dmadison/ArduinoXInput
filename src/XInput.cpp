@@ -249,6 +249,34 @@ void XInputGamepad::releaseAll() {
 	memset(tx + offset, 0x00, sizeof(tx) - offset);  // Clear TX array
 }
 
+boolean XInputGamepad::getButton(XInputControl button) {
+	const XInputMap_Button * buttonData = getButtonFromEnum(button);
+	if (buttonData == nullptr) return 0;  // Not a button
+	return tx[buttonData->index] & buttonData->mask;
+}
+
+boolean XInputGamepad::getDpad(XInputControl dpad) {
+	return getButton(dpad);
+}
+
+uint8_t XInputGamepad::getTrigger(XInputControl trigger) {
+	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
+	if (triggerData == nullptr) return 0;  // Not a trigger
+	return tx[triggerData->index];
+}
+
+int16_t XInputGamepad::getJoystickX(XInputControl joy) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return 0;  // Not a joystick
+	return (tx[joyData->x_high] << 8) | tx[joyData->x_low];
+}
+
+int16_t XInputGamepad::getJoystickY(XInputControl joy) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return 0;  // Not a joystick
+	return (tx[joyData->y_high] << 8) | tx[joyData->y_low];
+}
+
 uint8_t XInputGamepad::getPlayer() const {
 	return player;
 }

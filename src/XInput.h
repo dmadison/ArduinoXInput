@@ -87,6 +87,12 @@ public:
 
 	void releaseAll();
 
+	boolean getButton(XInputControl button);
+	boolean getDpad(XInputControl dpad);
+	uint8_t getTrigger(XInputControl trigger);
+	int16_t getJoystickX(XInputControl joy);
+	int16_t getJoystickY(XInputControl joy);
+
 	// Received Data
 	uint8_t getPlayer() const;  // Player # assigned to the controller (0 is unassigned)
 	uint16_t getRumble() const;  // Rumble motors. MSB is large weight, LSB is small
