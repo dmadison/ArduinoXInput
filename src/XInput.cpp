@@ -73,7 +73,7 @@ static const XInputMap_Button Map_ButtonR3(2, 7);
 
 static const XInputMap_Button Map_ButtonLB(3, 0);
 static const XInputMap_Button Map_ButtonRB(3, 1);
-static const XInputMap_Button Map_ButtonLogo(3, 3);
+static const XInputMap_Button Map_ButtonLogo(3, 2);
 static const XInputMap_Button Map_ButtonA(3, 4);
 static const XInputMap_Button Map_ButtonB(3, 5);
 static const XInputMap_Button Map_ButtonX(3, 6);
