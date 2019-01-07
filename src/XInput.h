@@ -73,7 +73,7 @@ class XInputGamepad {
 public:
 	XInputGamepad();
 
-	// Control surfaces
+	// Set Control Surfaces
 	void press(XInputControl button);
 	void release(XInputControl button);
 	void setButton(XInputControl button, boolean state);
@@ -86,6 +86,13 @@ public:
 	void setJoystick(XInputControl joy, int32_t x, int32_t y);
 
 	void releaseAll();
+
+	// Read Control Surfaces
+	boolean getButton(XInputControl button) const;
+	boolean getDpad(XInputControl dpad) const;
+	uint8_t getTrigger(XInputControl trigger) const;
+	int16_t getJoystickX(XInputControl joy) const;
+	int16_t getJoystickY(XInputControl joy) const;
 
 	// Received Data
 	uint8_t getPlayer() const;  // Player # assigned to the controller (0 is unassigned)
@@ -113,6 +120,7 @@ public:
 private:
 	static const uint32_t USB_Timeout = 12840;  // Packet timeout, in milliseconds
 	uint8_t tx[20];  // USB transmit data
+	boolean newData;  // Flag for tx data changed
 
 	uint8_t player;  // Gamepad player #, buffered
 	uint8_t rumble[2];  // Rumble motor data in, buffered

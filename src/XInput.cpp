@@ -25,6 +25,24 @@
  */
 
 #include "XInput.h"
+
+// Teensy 3.1-3.2:  __MK20DX256__
+// Teensy LC:       __MKL26Z64__
+// Teensy 3.5:      __MK64FX512__
+// Teensy 3.6:      __MK66FX1M0__
+
+#if defined(TEENSYDUINO) && \
+	(defined(__MK20DX256__) || defined(__MKL26Z64__) || \
+	 defined(__MK64FX512__) || defined(__MK66FX1M0__))
+
+	#ifndef USB_XINPUT
+	#error "USB type is not set to XInput in boards menu!"
+	#endif
+
+#else
+#error "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, or 3.6"
+#endif
+
 #include <limits>
 
 // --------------------------------------------------------
@@ -55,7 +73,7 @@ static const XInputMap_Button Map_ButtonR3(2, 7);
 
 static const XInputMap_Button Map_ButtonLB(3, 0);
 static const XInputMap_Button Map_ButtonRB(3, 1);
-static const XInputMap_Button Map_ButtonLogo(3, 3);
+static const XInputMap_Button Map_ButtonLogo(3, 2);
 static const XInputMap_Button Map_ButtonA(3, 4);
 static const XInputMap_Button Map_ButtonB(3, 5);
 static const XInputMap_Button Map_ButtonX(3, 6);
@@ -180,8 +198,11 @@ void XInputGamepad::release(XInputControl button) {
 void XInputGamepad::setButton(XInputControl button, boolean state) {
 	const XInputMap_Button * buttonData = getButtonFromEnum(button);
 	if (buttonData != nullptr) {
+		if (getButton(button) == state) return;  // Button hasn't changed
+
 		if (state) { tx[buttonData->index] |= buttonData->mask; }  // Press
 		else { tx[buttonData->index] &= ~(buttonData->mask); }  // Release
+		newData = true;
 	}
 	else {
 		Range * triggerRange = getRangeFromEnum(button);
@@ -208,8 +229,12 @@ void XInputGamepad::setDpad(boolean up, boolean down, boolean left, boolean righ
 void XInputGamepad::setTrigger(XInputControl trigger, int32_t val) {
 	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
 	if (triggerData == nullptr) return;  // Not a trigger
+
 	val = rescaleInput(val, *getRangeFromEnum(trigger), triggerData->range);
+	if (getTrigger(trigger) == val) return;  // Trigger hasn't changed
+
 	tx[triggerData->index] = val;
+	newData = true;
 }
 
 void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
@@ -219,16 +244,49 @@ void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	x = rescaleInput(x, *getRangeFromEnum(joy), joyData->range);
 	y = rescaleInput(y, *getRangeFromEnum(joy), joyData->range);
 
+	if (getJoystickX(joy) == x && getJoystickY(joy) == y) return;  // Joy hasn't changed
+
 	tx[joyData->x_low]  = lowByte(x);
 	tx[joyData->x_high] = highByte(x);
 
 	tx[joyData->y_low]  = lowByte(y);
 	tx[joyData->y_high] = highByte(y);
+
+	newData = true;
 }
 
 void XInputGamepad::releaseAll() {
 	const uint8_t offset = 2;  // Skip message type and packet size
 	memset(tx + offset, 0x00, sizeof(tx) - offset);  // Clear TX array
+	newData = true;  // Data changed and is unsent
+}
+
+boolean XInputGamepad::getButton(XInputControl button) const {
+	const XInputMap_Button * buttonData = getButtonFromEnum(button);
+	if (buttonData == nullptr) return 0;  // Not a button
+	return tx[buttonData->index] & buttonData->mask;
+}
+
+boolean XInputGamepad::getDpad(XInputControl dpad) const {
+	return getButton(dpad);
+}
+
+uint8_t XInputGamepad::getTrigger(XInputControl trigger) const {
+	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
+	if (triggerData == nullptr) return 0;  // Not a trigger
+	return tx[triggerData->index];
+}
+
+int16_t XInputGamepad::getJoystickX(XInputControl joy) const {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return 0;  // Not a joystick
+	return (tx[joyData->x_high] << 8) | tx[joyData->x_low];
+}
+
+int16_t XInputGamepad::getJoystickY(XInputControl joy) const {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return 0;  // Not a joystick
+	return (tx[joyData->y_high] << 8) | tx[joyData->y_low];
 }
 
 uint8_t XInputGamepad::getPlayer() const {
@@ -257,7 +315,9 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 
 //Send an update packet to the PC
 void XInputGamepad::send() {
+	if (!newData) return;  // TX data hasn't changed
 	XInputUSB.send(tx, USB_Timeout);
+	newData = false;
 }
 
 void XInputGamepad::receive() {
@@ -284,23 +344,28 @@ void XInputGamepad::parseLED(uint8_t leds) {
 	if (leds > 0x0D) return;  // Not a known pattern
 
 	ledPattern = (XInputLEDPattern) leds;  // Save pattern
-	if (ledPattern == XInputLEDPattern::Off || ledPattern == XInputLEDPattern::Blinking) {
+	switch (ledPattern) {
+	case(XInputLEDPattern::Off):
+	case(XInputLEDPattern::Blinking):
 		player = 0;  // Not connected
-	}
-	else if (ledPattern == XInputLEDPattern::On1 || ledPattern == XInputLEDPattern::Flash1) {
+		break;
+	case(XInputLEDPattern::On1):
+	case(XInputLEDPattern::Flash1):
 		player = 1;
-	}
-	else if (ledPattern == XInputLEDPattern::On2 || ledPattern == XInputLEDPattern::Flash2) {
+		break;
+	case(XInputLEDPattern::On2):
+	case(XInputLEDPattern::Flash2):
 		player = 2;
-	}
-	else if (ledPattern == XInputLEDPattern::On3 || ledPattern == XInputLEDPattern::Flash3) {
+		break;
+	case(XInputLEDPattern::On3):
+	case(XInputLEDPattern::Flash3):
 		player = 3;
-	}
-	else if (ledPattern == XInputLEDPattern::On4 || ledPattern == XInputLEDPattern::Flash4) {
+		break;
+	case(XInputLEDPattern::On4):
+	case(XInputLEDPattern::Flash4):
 		player = 4;
-	}
-	else {
-		return;  // Pattern doesn't affect player #
+		break;
+	default: return;  // Pattern doesn't affect player #
 	}
 }
 

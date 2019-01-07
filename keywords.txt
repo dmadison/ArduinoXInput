@@ -31,13 +31,19 @@ setJoystick	KEYWORD2
 
 releaseAll	KEYWORD2
 
+# Read Control Data
+getButton	KEYWORD2
+getDpad	KEYWORD2
+getTrigger	KEYWORD2
+getJoystickX	KEYWORD2
+getJoystickY	KEYWORD2
+
 # Receive data
 getPlayer	KEYWORD2
 getRumble	KEYWORD2
 getRumbleLeft	KEYWORD2
 getRumbleRight	KEYWORD2
 
-getLEDPatternID	KEYWORD2
 getLEDPatternID	KEYWORD2
 
 # USB I/O
