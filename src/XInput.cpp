@@ -344,23 +344,28 @@ void XInputGamepad::parseLED(uint8_t leds) {
 	if (leds > 0x0D) return;  // Not a known pattern
 
 	ledPattern = (XInputLEDPattern) leds;  // Save pattern
-	if (ledPattern == XInputLEDPattern::Off || ledPattern == XInputLEDPattern::Blinking) {
+	switch (ledPattern) {
+	case(XInputLEDPattern::Off):
+	case(XInputLEDPattern::Blinking):
 		player = 0;  // Not connected
-	}
-	else if (ledPattern == XInputLEDPattern::On1 || ledPattern == XInputLEDPattern::Flash1) {
+		break;
+	case(XInputLEDPattern::On1):
+	case(XInputLEDPattern::Flash1):
 		player = 1;
-	}
-	else if (ledPattern == XInputLEDPattern::On2 || ledPattern == XInputLEDPattern::Flash2) {
+		break;
+	case(XInputLEDPattern::On2):
+	case(XInputLEDPattern::Flash2):
 		player = 2;
-	}
-	else if (ledPattern == XInputLEDPattern::On3 || ledPattern == XInputLEDPattern::Flash3) {
+		break;
+	case(XInputLEDPattern::On3):
+	case(XInputLEDPattern::Flash3):
 		player = 3;
-	}
-	else if (ledPattern == XInputLEDPattern::On4 || ledPattern == XInputLEDPattern::Flash4) {
+		break;
+	case(XInputLEDPattern::On4):
+	case(XInputLEDPattern::Flash4):
 		player = 4;
-	}
-	else {
-		return;  // Pattern doesn't affect player #
+		break;
+	default: return;  // Pattern doesn't affect player #
 	}
 }
 
