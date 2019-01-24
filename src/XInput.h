@@ -27,7 +27,7 @@
 #ifndef XInput_h
 #define XInput_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 enum XInputControl {
 	BUTTON_A,
