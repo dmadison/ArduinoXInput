@@ -77,7 +77,7 @@ static const XInputMap_Button Map_ButtonB(3, 5);
 static const XInputMap_Button Map_ButtonX(3, 6);
 static const XInputMap_Button Map_ButtonY(3, 7);
 
-constexpr const XInputMap_Button * getButtonFromEnum(XInputControl ctrl) {
+const XInputMap_Button * getButtonFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(DPAD_UP):      return &Map_DpadUp;
 	case(DPAD_DOWN):    return &Map_DpadDown;
@@ -117,7 +117,7 @@ const XInputGamepad::Range XInputMap_Trigger::range = { 0, 255 };  // uint8_t
 static const XInputMap_Trigger Map_TriggerLeft(4);
 static const XInputMap_Trigger Map_TriggerRight(5);
 
-constexpr const XInputMap_Trigger * getTriggerFromEnum(XInputControl ctrl) {
+const XInputMap_Trigger * getTriggerFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(TRIGGER_LEFT): return &Map_TriggerLeft;
 	case(TRIGGER_RIGHT): return &Map_TriggerRight;
@@ -145,7 +145,7 @@ const XInputGamepad::Range XInputMap_Joystick::range = { -32768, 32767 };  // in
 static const XInputMap_Joystick Map_JoystickLeft(6, 7, 8, 9);
 static const XInputMap_Joystick Map_JoystickRight(10, 11, 12, 13);
 
-constexpr const XInputMap_Joystick * getJoyFromEnum(XInputControl ctrl) {
+const XInputMap_Joystick * getJoyFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(JOY_LEFT): return &Map_JoystickLeft;
 	case(JOY_RIGHT): return &Map_JoystickRight;
