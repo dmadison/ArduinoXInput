@@ -43,8 +43,6 @@
 #error "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, or 3.6"
 #endif
 
-#include <limits>
-
 // --------------------------------------------------------
 // XInput Button Maps                                     |
 // (Matches ID to tx index with bitmask)                  |
@@ -114,10 +112,7 @@ struct XInputMap_Trigger {
 	const uint8_t index;
 };
 
-const XInputGamepad::Range XInputMap_Trigger::range = { 
-	std::numeric_limits<uint8_t>::min(), // 0
-	std::numeric_limits<uint8_t>::max()  // 255
-};
+const XInputGamepad::Range XInputMap_Trigger::range = { 0, 255 };  // uint8_t
 
 static const XInputMap_Trigger Map_TriggerLeft(4);
 static const XInputMap_Trigger Map_TriggerRight(5);
@@ -145,10 +140,7 @@ struct XInputMap_Joystick {
 	const uint8_t y_high;
 };
 
-const XInputGamepad::Range XInputMap_Joystick::range = {
-	std::numeric_limits<int16_t>::min(), // -32768
-	std::numeric_limits<int16_t>::max()  //  32767
-};
+const XInputGamepad::Range XInputMap_Joystick::range = { -32768, 32767 };  // int16_t
 
 static const XInputMap_Joystick Map_JoystickLeft(6, 7, 8, 9);
 static const XInputMap_Joystick Map_JoystickRight(10, 11, 12, 13);
