@@ -2,7 +2,7 @@
  *  Project     Arduino XInput Library
  *  @author     David Madison
  *  @link       github.com/dmadison/ArduinoXInput
- *  @license    MIT - Copyright (c) 2018 David Madison
+ *  @license    MIT - Copyright (c) 2019 David Madison
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
