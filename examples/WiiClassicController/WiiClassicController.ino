@@ -1,7 +1,7 @@
 /*
- *  Project     Teensy XInput Library
+ *  Project     Arduino XInput Library
  *  @author     David Madison
- *  @link       github.com/dmadison/TeensyXInput
+ *  @link       github.com/dmadison/ArduinoXInput
  *  @license    MIT - Copyright (c) 2018 David Madison
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
