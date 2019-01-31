@@ -307,12 +307,15 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 
 //Send an update packet to the PC
 void XInputGamepad::send() {
+#ifdef USB_XINPUT
 	if (!newData) return;  // TX data hasn't changed
 	XInputUSB.send(tx, USB_Timeout);
 	newData = false;
+#endif
 }
 
 void XInputGamepad::receive() {
+#ifdef USB_XINPUT
 	if (XInputUSB.available() == 0) {
 		return;  // No packet available
 	}
@@ -330,6 +333,7 @@ void XInputGamepad::receive() {
 	else if (rx[0] == 0x01) {
 		parseLED(rx[2]);
 	}
+#endif
 }
 
 void XInputGamepad::parseLED(uint8_t leds) {
