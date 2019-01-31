@@ -57,6 +57,7 @@ setRange	KEYWORD2
 
 # Other
 reset	KEYWORD2
+printDebug	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)

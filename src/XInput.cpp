@@ -311,6 +311,9 @@ void XInputGamepad::send() {
 	if (!newData) return;  // TX data hasn't changed
 	XInputUSB.send(tx, USB_Timeout);
 	newData = false;
+#else
+	#warning "Using debug output for XInput send()"
+	printDebug();
 #endif
 }
 
@@ -417,6 +420,62 @@ void XInputGamepad::reset() {
 	// Reset rescale ranges
 	setTriggerRange(XInputMap_Trigger::range.min, XInputMap_Trigger::range.max);
 	setJoystickRange(XInputMap_Joystick::range.min, XInputMap_Joystick::range.max);
+}
+
+void XInputGamepad::printDebug(Print &output) const {
+	const char fillCharacter = '_';
+
+	char buffer[80];
+
+	// Buttons
+	const char dpadLPrint = getButton(DPAD_LEFT)  ? '<' : fillCharacter;
+	const char dpadUPrint = getButton(DPAD_UP)    ? '^' : fillCharacter;
+	const char dpadDPrint = getButton(DPAD_DOWN)  ? 'v' : fillCharacter;
+	const char dpadRPrint = getButton(DPAD_RIGHT) ? '>' : fillCharacter;
+
+	const char aButtonPrint = getButton(BUTTON_A) ? 'A' : fillCharacter;
+	const char bButtonPrint = getButton(BUTTON_B) ? 'B' : fillCharacter;
+	const char xButtonPrint = getButton(BUTTON_X) ? 'X' : fillCharacter;
+	const char yButtonPrint = getButton(BUTTON_Y) ? 'Y' : fillCharacter;
+
+	const char startPrint = getButton(BUTTON_START) ? '>' : fillCharacter;
+	const char backPrint  = getButton(BUTTON_BACK)  ? '<' : fillCharacter;
+
+	const char logoPrint = getButton(BUTTON_LOGO) ? 'X' : fillCharacter;
+
+	// Bumpers
+	char leftBumper[3]  = "LB";
+	char rightBumper[3] = "RB";
+
+	if (!getButton(BUTTON_LB)) {
+		leftBumper[0] = fillCharacter;
+		leftBumper[1] = fillCharacter;
+	}
+	if (!getButton(BUTTON_RB)) {
+		rightBumper[0] = fillCharacter;
+		rightBumper[1] = fillCharacter;
+	}
+
+	output.print("XInput Debug: ");
+	sprintf(buffer,
+		"LT: %3u %s L:(%6d, %6d) %c%c%c%c | %c%c%c | %c%c%c%c R:(%6d, %6d) %s RT: %3u",
+		
+		// Left side controls
+		getTrigger(TRIGGER_LEFT),
+		leftBumper,
+		getJoystickX(JOY_LEFT), getJoystickY(JOY_LEFT),
+
+		// Buttons
+		dpadLPrint, dpadUPrint, dpadDPrint, dpadRPrint,
+		backPrint, logoPrint, startPrint,
+		aButtonPrint, bButtonPrint, xButtonPrint, yButtonPrint,
+
+		// Right side controls
+		getJoystickX(JOY_RIGHT), getJoystickY(JOY_RIGHT),
+		rightBumper,
+		getTrigger(TRIGGER_RIGHT)
+	);
+	output.println(buffer);
 }
 
 XInputGamepad XInput;
