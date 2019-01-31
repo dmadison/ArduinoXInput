@@ -1,8 +1,8 @@
 /*
- *  Project     Teensy XInput Library
+ *  Project     Arduino XInput Library
  *  @author     David Madison
- *  @link       github.com/dmadison/TeensyXInput
- *  @license    MIT - Copyright (c) 2018 David Madison
+ *  @link       github.com/dmadison/ArduinoXInput
+ *  @license    MIT - Copyright (c) 2019 David Madison
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@
 #ifndef XInput_h
 #define XInput_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 enum XInputControl {
 	BUTTON_A,

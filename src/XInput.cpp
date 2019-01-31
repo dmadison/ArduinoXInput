@@ -1,8 +1,8 @@
 /*
- *  Project     Teensy XInput Library
+ *  Project     Arduino XInput Library
  *  @author     David Madison
- *  @link       github.com/dmadison/TeensyXInput
- *  @license    MIT - Copyright (c) 2018 David Madison
+ *  @link       github.com/dmadison/ArduinoXInput
+ *  @license    MIT - Copyright (c) 2019 David Madison
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,8 +43,6 @@
 #error "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, or 3.6"
 #endif
 
-#include <limits>
-
 // --------------------------------------------------------
 // XInput Button Maps                                     |
 // (Matches ID to tx index with bitmask)                  |
@@ -79,7 +77,7 @@ static const XInputMap_Button Map_ButtonB(3, 5);
 static const XInputMap_Button Map_ButtonX(3, 6);
 static const XInputMap_Button Map_ButtonY(3, 7);
 
-constexpr const XInputMap_Button * getButtonFromEnum(XInputControl ctrl) {
+const XInputMap_Button * getButtonFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(DPAD_UP):      return &Map_DpadUp;
 	case(DPAD_DOWN):    return &Map_DpadDown;
@@ -114,15 +112,12 @@ struct XInputMap_Trigger {
 	const uint8_t index;
 };
 
-const XInputGamepad::Range XInputMap_Trigger::range = { 
-	std::numeric_limits<uint8_t>::min(), // 0
-	std::numeric_limits<uint8_t>::max()  // 255
-};
+const XInputGamepad::Range XInputMap_Trigger::range = { 0, 255 };  // uint8_t
 
 static const XInputMap_Trigger Map_TriggerLeft(4);
 static const XInputMap_Trigger Map_TriggerRight(5);
 
-constexpr const XInputMap_Trigger * getTriggerFromEnum(XInputControl ctrl) {
+const XInputMap_Trigger * getTriggerFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(TRIGGER_LEFT): return &Map_TriggerLeft;
 	case(TRIGGER_RIGHT): return &Map_TriggerRight;
@@ -145,15 +140,12 @@ struct XInputMap_Joystick {
 	const uint8_t y_high;
 };
 
-const XInputGamepad::Range XInputMap_Joystick::range = {
-	std::numeric_limits<int16_t>::min(), // -32768
-	std::numeric_limits<int16_t>::max()  //  32767
-};
+const XInputGamepad::Range XInputMap_Joystick::range = { -32768, 32767 };  // int16_t
 
 static const XInputMap_Joystick Map_JoystickLeft(6, 7, 8, 9);
 static const XInputMap_Joystick Map_JoystickRight(10, 11, 12, 13);
 
-constexpr const XInputMap_Joystick * getJoyFromEnum(XInputControl ctrl) {
+const XInputMap_Joystick * getJoyFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(JOY_LEFT): return &Map_JoystickLeft;
 	case(JOY_RIGHT): return &Map_JoystickRight;

@@ -1,1 +1,1 @@
-# TeensyXInput
+# Arduino XInput Library

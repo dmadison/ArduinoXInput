@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For Teensy XInput
+# Syntax Coloring Map For Arduino XInput Library
 #######################################
 
 #######################################
