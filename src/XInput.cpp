@@ -378,9 +378,9 @@ XInputGamepad::Range * XInputGamepad::getRangeFromEnum(XInputControl ctrl) {
 }
 
 int32_t XInputGamepad::rescaleInput(int32_t val, Range in, Range out) {
-	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	if (val <= in.min) return out.min;  // Out of range -
 	if (val >= in.max) return out.max;  // Out of range +
+	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	return map(val, in.min, in.max, out.min, out.max);
 }
 
