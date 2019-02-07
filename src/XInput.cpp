@@ -306,8 +306,8 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 
 //Send an update packet to the PC
 void XInputGamepad::send() {
-#ifdef USB_XINPUT
 	if (!newData) return;  // TX data hasn't changed
+#ifdef USB_XINPUT
 	XInputUSB::send(tx, USB_Timeout);
 	newData = false;
 #else
