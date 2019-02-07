@@ -308,7 +308,7 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 void XInputGamepad::send() {
 #ifdef USB_XINPUT
 	if (!newData) return;  // TX data hasn't changed
-	XInputUSB.send(tx, USB_Timeout);
+	XInputUSB::send(tx, USB_Timeout);
 	newData = false;
 #else
 	#warning "Using debug output for XInput send()"
@@ -318,13 +318,13 @@ void XInputGamepad::send() {
 
 void XInputGamepad::receive() {
 #ifdef USB_XINPUT
-	if (XInputUSB.available() == 0) {
+	if (XInputUSB::available() == 0) {
 		return;  // No packet available
 	}
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	XInputUSB.recv(rx, USB_Timeout);
+	XInputUSB::recv(rx, USB_Timeout);
 	
 	// Rumble Packet
 	if ((rx[0] == 0x00) & (rx[1] == 0x08)) {
