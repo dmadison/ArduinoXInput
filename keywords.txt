@@ -47,6 +47,8 @@ getRumbleRight	KEYWORD2
 
 getLEDPatternID	KEYWORD2
 
+setReceiveCallback	KEYWORD2
+
 # USB I/O
 connected	KEYWORD2
 send	KEYWORD2

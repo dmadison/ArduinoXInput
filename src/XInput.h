@@ -108,6 +108,10 @@ public:
 	uint8_t getLEDPatternID() const;  // Returns LED pattern ID #
 	XInputLEDPattern getLEDPattern() const;  // Returns LED pattern type
 
+	// Received Data Callback
+	using RecvCallbackType = void(*)(uint8_t packetType);
+	void setReceiveCallback(RecvCallbackType);
+
 	// USB IO
 	boolean connected();
 	size_t send();
@@ -131,6 +135,7 @@ private:
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
 
+	RecvCallbackType recvCallback;
 	uint8_t player;  // Gamepad player #, buffered
 	uint8_t rumble[2];  // Rumble motor data in, buffered
 	XInputLEDPattern ledPattern;  // LED pattern data in, buffered

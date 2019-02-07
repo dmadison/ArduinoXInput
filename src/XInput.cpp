@@ -317,6 +317,10 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 	return (uint8_t)ledPattern;
 }
 
+void XInputGamepad::setReceiveCallback(RecvCallbackType cback) {
+	recvCallback = cback;
+}
+
 boolean XInputGamepad::connected() {
 #ifdef USB_XINPUT
 	return XInputUSB::connected();
@@ -359,6 +363,12 @@ size_t XInputGamepad::receive() {
 	else if (PacketType == (uint8_t) XInputReceiveType::LEDs) {
 		parseLED(rx[2]);
 	}
+
+	// User-defined receive callback
+	if (recvCallback != nullptr) {
+		recvCallback(PacketType);
+	}
+
 	return bytesRecv;
 #else
 	return 0;
@@ -446,6 +456,9 @@ void XInputGamepad::reset() {
 	// Reset rescale ranges
 	setTriggerRange(XInputMap_Trigger::range.min, XInputMap_Trigger::range.max);
 	setJoystickRange(XInputMap_Joystick::range.min, XInputMap_Joystick::range.max);
+
+	// Clear user-set receive callback
+	recvCallback = nullptr;
 }
 
 void XInputGamepad::printDebug(Print &output) const {
