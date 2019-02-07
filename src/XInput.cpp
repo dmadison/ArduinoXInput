@@ -304,6 +304,14 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 	return (uint8_t)ledPattern;
 }
 
+boolean XInputGamepad::connected() {
+#ifdef USB_XINPUT
+	return XInputUSB::connected();
+#else
+	return false;
+#endif
+}
+
 //Send an update packet to the PC
 size_t XInputGamepad::send() {
 	if (!newData) return 0;  // TX data hasn't changed

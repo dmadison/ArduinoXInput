@@ -104,6 +104,7 @@ public:
 	XInputLEDPattern getLEDPattern() const;  // Returns LED pattern type
 
 	// USB IO
+	boolean connected();
 	size_t send();
 	size_t receive();
 
