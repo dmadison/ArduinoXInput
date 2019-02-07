@@ -104,8 +104,8 @@ public:
 	XInputLEDPattern getLEDPattern() const;  // Returns LED pattern type
 
 	// USB IO
-	void send();
-	void receive();
+	size_t send();
+	size_t receive();
 
 	// Control Input Ranges
 	struct Range { int32_t min; int32_t max; };

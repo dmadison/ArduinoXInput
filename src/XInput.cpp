@@ -305,8 +305,8 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 }
 
 //Send an update packet to the PC
-void XInputGamepad::send() {
-	if (!newData) return;  // TX data hasn't changed
+size_t XInputGamepad::send() {
+	if (!newData) return 0;  // TX data hasn't changed
 #ifdef USB_XINPUT
 	XInputUSB::send(tx, USB_Timeout);
 	newData = false;
@@ -314,17 +314,18 @@ void XInputGamepad::send() {
 	#warning "Using debug output for XInput send()"
 	printDebug();
 #endif
+	return sizeof(tx);
 }
 
-void XInputGamepad::receive() {
+size_t XInputGamepad::receive() {
 #ifdef USB_XINPUT
 	if (XInputUSB::available() == 0) {
-		return;  // No packet available
+		return 0;  // No packet available
 	}
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	XInputUSB::recv(rx, USB_Timeout);
+	size_t bytesRecv = XInputUSB::recv(rx, USB_Timeout);
 	
 	// Rumble Packet
 	if ((rx[0] == 0x00) & (rx[1] == 0x08)) {
@@ -335,6 +336,9 @@ void XInputGamepad::receive() {
 	else if (rx[0] == 0x01) {
 		parseLED(rx[2]);
 	}
+	return bytesRecv;
+#else
+	return 0;
 #endif
 }
 
