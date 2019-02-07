@@ -347,14 +347,16 @@ size_t XInputGamepad::receive() {
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
 	size_t bytesRecv = XInputUSB::recv(rx, USB_Timeout);
+
+	const uint8_t PacketType = rx[0];
 	
 	// Rumble Packet
-	if ((rx[0] == 0x00) & (rx[1] == 0x08)) {
+	if(PacketType == (uint8_t) XInputReceiveType::Rumble) {
 		rumble[RumbleLeft.bufferIndex]  = rx[RumbleLeft.rxIndex];   // Big weight (Left grip)
 		rumble[RumbleRight.bufferIndex] = rx[RumbleRight.rxIndex];  // Small weight (Right grip)
 	}
 	// LED Packet
-	else if (rx[0] == 0x01) {
+	else if (PacketType == (uint8_t) XInputReceiveType::LEDs) {
 		parseLED(rx[2]);
 	}
 	return bytesRecv;

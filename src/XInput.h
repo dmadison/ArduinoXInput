@@ -51,6 +51,11 @@ enum XInputControl {
 	JOY_RIGHT,
 };
 
+enum class XInputReceiveType {
+	Rumble = 0x00,
+	LEDs = 0x01,
+};
+
 enum class XInputLEDPattern {
 	Off = 0x00,
 	Blinking = 0x01,
