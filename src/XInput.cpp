@@ -313,10 +313,6 @@ XInputLEDPattern XInputGamepad::getLEDPattern() const {
 	return ledPattern;
 }
 
-uint8_t XInputGamepad::getLEDPatternID() const {
-	return (uint8_t)ledPattern;
-}
-
 void XInputGamepad::setReceiveCallback(RecvCallbackType cback) {
 	recvCallback = cback;
 }

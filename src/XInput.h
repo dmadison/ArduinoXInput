@@ -101,11 +101,11 @@ public:
 
 	// Received Data
 	uint8_t getPlayer() const;  // Player # assigned to the controller (0 is unassigned)
+
 	uint16_t getRumble() const;  // Rumble motors. MSB is large weight, LSB is small
-	uint8_t getRumbleLeft() const;  // Large rumble motor, left grip
-	uint8_t getRumbleRight() const; // Small rumble motor, right grip
-	
-	uint8_t getLEDPatternID() const;  // Returns LED pattern ID #
+	uint8_t  getRumbleLeft() const;  // Large rumble motor, left grip
+	uint8_t  getRumbleRight() const; // Small rumble motor, right grip
+
 	XInputLEDPattern getLEDPattern() const;  // Returns LED pattern type
 
 	// Received Data Callback

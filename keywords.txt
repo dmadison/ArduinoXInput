@@ -44,8 +44,7 @@ getPlayer	KEYWORD2
 getRumble	KEYWORD2
 getRumbleLeft	KEYWORD2
 getRumbleRight	KEYWORD2
-
-getLEDPatternID	KEYWORD2
+getLEDPattern	KEYWORD2
 
 setReceiveCallback	KEYWORD2
 
