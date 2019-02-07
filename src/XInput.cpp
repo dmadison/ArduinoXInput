@@ -167,6 +167,16 @@ struct XInputMap_Rumble {
 static const XInputMap_Rumble RumbleLeft(3, 0);   // Large motor
 static const XInputMap_Rumble RumbleRight(4, 1);  // Small motor
 
+// --------------------------------------------------------
+// XInput USB Receive Callback                            |
+// --------------------------------------------------------
+
+#ifdef USB_XINPUT
+static void XInputLib_Receive_Callback() {
+	XInput.receive();
+}
+#endif
+
 
 // --------------------------------------------------------
 // XInputGamepad Class (API)                              |
@@ -176,6 +186,9 @@ XInputGamepad::XInputGamepad() :
 	tx(), rumble() // Zero initialize arrays
 {
 	reset();
+#ifdef USB_XINPUT
+	XInputUSB::setRecvCallback(XInputLib_Receive_Callback);
+#endif
 }
 
 void XInputGamepad::press(XInputControl button) {
