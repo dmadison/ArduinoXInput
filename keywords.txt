@@ -47,6 +47,7 @@ getRumbleRight	KEYWORD2
 getLEDPatternID	KEYWORD2
 
 # USB I/O
+connected	KEYWORD2
 send	KEYWORD2
 receive	KEYWORD2
 
@@ -57,6 +58,7 @@ setRange	KEYWORD2
 
 # Other
 reset	KEYWORD2
+printDebug	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)

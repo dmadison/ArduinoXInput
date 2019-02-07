@@ -36,7 +36,7 @@ ClassicController classic;
 void setup() {
 	classic.begin();
 
-	XInput.setTriggerRange(2, 28);
+	XInput.setTriggerRange(4, 26);
 
 	XInput.setRange(JOY_LEFT, 8, 56);
 	XInput.setRange(JOY_RIGHT, 4, 28);

@@ -26,6 +26,10 @@
 
 #include "XInput.h"
 
+#ifndef USB_XINPUT
+#warning "USB type is not set to XInput in boards menu! Board will not behave as an XInput device"
+#endif
+
 // Teensy 3.1-3.2:  __MK20DX256__
 // Teensy LC:       __MKL26Z64__
 // Teensy 3.5:      __MK64FX512__
@@ -34,13 +38,8 @@
 #if defined(TEENSYDUINO) && \
 	(defined(__MK20DX256__) || defined(__MKL26Z64__) || \
 	 defined(__MK64FX512__) || defined(__MK66FX1M0__))
-
-	#ifndef USB_XINPUT
-	#error "USB type is not set to XInput in boards menu!"
-	#endif
-
 #else
-#error "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, or 3.6"
+#warning "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, or 3.6"
 #endif
 
 // --------------------------------------------------------
@@ -305,21 +304,36 @@ uint8_t XInputGamepad::getLEDPatternID() const {
 	return (uint8_t)ledPattern;
 }
 
-//Send an update packet to the PC
-void XInputGamepad::send() {
-	if (!newData) return;  // TX data hasn't changed
-	XInputUSB.send(tx, USB_Timeout);
-	newData = false;
+boolean XInputGamepad::connected() {
+#ifdef USB_XINPUT
+	return XInputUSB::connected();
+#else
+	return false;
+#endif
 }
 
-void XInputGamepad::receive() {
-	if (XInputUSB.available() == 0) {
-		return;  // No packet available
+//Send an update packet to the PC
+size_t XInputGamepad::send() {
+	if (!newData) return 0;  // TX data hasn't changed
+#ifdef USB_XINPUT
+	XInputUSB::send(tx, USB_Timeout);
+	newData = false;
+#else
+	#warning "Using debug output for XInput send()"
+	printDebug();
+#endif
+	return sizeof(tx);
+}
+
+size_t XInputGamepad::receive() {
+#ifdef USB_XINPUT
+	if (XInputUSB::available() == 0) {
+		return 0;  // No packet available
 	}
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	XInputUSB.recv(rx, USB_Timeout);
+	size_t bytesRecv = XInputUSB::recv(rx, USB_Timeout);
 	
 	// Rumble Packet
 	if ((rx[0] == 0x00) & (rx[1] == 0x08)) {
@@ -330,6 +344,10 @@ void XInputGamepad::receive() {
 	else if (rx[0] == 0x01) {
 		parseLED(rx[2]);
 	}
+	return bytesRecv;
+#else
+	return 0;
+#endif
 }
 
 void XInputGamepad::parseLED(uint8_t leds) {
@@ -372,9 +390,9 @@ XInputGamepad::Range * XInputGamepad::getRangeFromEnum(XInputControl ctrl) {
 }
 
 int32_t XInputGamepad::rescaleInput(int32_t val, Range in, Range out) {
-	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	if (val <= in.min) return out.min;  // Out of range -
 	if (val >= in.max) return out.max;  // Out of range +
+	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	return map(val, in.min, in.max, out.min, out.max);
 }
 
@@ -413,6 +431,62 @@ void XInputGamepad::reset() {
 	// Reset rescale ranges
 	setTriggerRange(XInputMap_Trigger::range.min, XInputMap_Trigger::range.max);
 	setJoystickRange(XInputMap_Joystick::range.min, XInputMap_Joystick::range.max);
+}
+
+void XInputGamepad::printDebug(Print &output) const {
+	const char fillCharacter = '_';
+
+	char buffer[80];
+
+	// Buttons
+	const char dpadLPrint = getButton(DPAD_LEFT)  ? '<' : fillCharacter;
+	const char dpadUPrint = getButton(DPAD_UP)    ? '^' : fillCharacter;
+	const char dpadDPrint = getButton(DPAD_DOWN)  ? 'v' : fillCharacter;
+	const char dpadRPrint = getButton(DPAD_RIGHT) ? '>' : fillCharacter;
+
+	const char aButtonPrint = getButton(BUTTON_A) ? 'A' : fillCharacter;
+	const char bButtonPrint = getButton(BUTTON_B) ? 'B' : fillCharacter;
+	const char xButtonPrint = getButton(BUTTON_X) ? 'X' : fillCharacter;
+	const char yButtonPrint = getButton(BUTTON_Y) ? 'Y' : fillCharacter;
+
+	const char startPrint = getButton(BUTTON_START) ? '>' : fillCharacter;
+	const char backPrint  = getButton(BUTTON_BACK)  ? '<' : fillCharacter;
+
+	const char logoPrint = getButton(BUTTON_LOGO) ? 'X' : fillCharacter;
+
+	// Bumpers
+	char leftBumper[3]  = "LB";
+	char rightBumper[3] = "RB";
+
+	if (!getButton(BUTTON_LB)) {
+		leftBumper[0] = fillCharacter;
+		leftBumper[1] = fillCharacter;
+	}
+	if (!getButton(BUTTON_RB)) {
+		rightBumper[0] = fillCharacter;
+		rightBumper[1] = fillCharacter;
+	}
+
+	output.print("XInput Debug: ");
+	sprintf(buffer,
+		"LT: %3u %s L:(%6d, %6d) %c%c%c%c | %c%c%c | %c%c%c%c R:(%6d, %6d) %s RT: %3u",
+		
+		// Left side controls
+		getTrigger(TRIGGER_LEFT),
+		leftBumper,
+		getJoystickX(JOY_LEFT), getJoystickY(JOY_LEFT),
+
+		// Buttons
+		dpadLPrint, dpadUPrint, dpadDPrint, dpadRPrint,
+		backPrint, logoPrint, startPrint,
+		aButtonPrint, bButtonPrint, xButtonPrint, yButtonPrint,
+
+		// Right side controls
+		getJoystickX(JOY_RIGHT), getJoystickY(JOY_RIGHT),
+		rightBumper,
+		getTrigger(TRIGGER_RIGHT)
+	);
+	output.println(buffer);
 }
 
 XInputGamepad XInput;

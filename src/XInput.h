@@ -104,8 +104,9 @@ public:
 	XInputLEDPattern getLEDPattern() const;  // Returns LED pattern type
 
 	// USB IO
-	void send();
-	void receive();
+	boolean connected();
+	size_t send();
+	size_t receive();
 
 	// Control Input Ranges
 	struct Range { int32_t min; int32_t max; };
@@ -116,6 +117,9 @@ public:
 
 	// Setup
 	void reset();
+
+	// Debug
+	void printDebug(Print& output = Serial) const;
 
 private:
 	static const uint32_t USB_Timeout = 12840;  // Packet timeout, in milliseconds
