@@ -135,7 +135,4 @@ void loop() {
 
 	// Send values to PC
 	XInput.send();
-
-	// Receive data from PC
-	XInput.receive();
 }

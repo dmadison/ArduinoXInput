@@ -74,7 +74,4 @@ void loop() {
 
 	// Send control data to the computer
 	XInput.send();
-
-	// Receive data (player number, rumble motors, etc.)
-	XInput.receive();
 }

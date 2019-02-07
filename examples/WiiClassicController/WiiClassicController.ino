@@ -77,5 +77,4 @@ void loop() {
 	}
 
 	XInput.send();
-	XInput.receive();
 }
