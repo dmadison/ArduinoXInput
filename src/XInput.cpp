@@ -326,19 +326,19 @@ boolean XInputGamepad::connected() {
 }
 
 //Send an update packet to the PC
-size_t XInputGamepad::send() {
+int XInputGamepad::send() {
 	if (!newData) return 0;  // TX data hasn't changed
 #ifdef USB_XINPUT
-	XInputUSB::send(tx, USB_Timeout);
 	newData = false;
+	return XInputUSB::send(tx, sizeof(tx));
 #else
 	#warning "Using debug output for XInput send()"
 	printDebug();
-#endif
 	return sizeof(tx);
+#endif
 }
 
-size_t XInputGamepad::receive() {
+int XInputGamepad::receive() {
 #ifdef USB_XINPUT
 	if (XInputUSB::available() == 0) {
 		return 0;  // No packet available
@@ -346,23 +346,26 @@ size_t XInputGamepad::receive() {
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	size_t bytesRecv = XInputUSB::recv(rx, USB_Timeout);
+	const int bytesRecv = XInputUSB::recv(rx, sizeof(rx));
 
-	const uint8_t PacketType = rx[0];
-	
-	// Rumble Packet
-	if(PacketType == (uint8_t) XInputReceiveType::Rumble) {
-		rumble[RumbleLeft.bufferIndex]  = rx[RumbleLeft.rxIndex];   // Big weight (Left grip)
-		rumble[RumbleRight.bufferIndex] = rx[RumbleRight.rxIndex];  // Small weight (Right grip)
-	}
-	// LED Packet
-	else if (PacketType == (uint8_t) XInputReceiveType::LEDs) {
-		parseLED(rx[2]);
-	}
+	// Only process if received 3 or more bytes (min valid packet size)
+	if (bytesRecv >= 3) {
+		const uint8_t PacketType = rx[0];
 
-	// User-defined receive callback
-	if (recvCallback != nullptr) {
-		recvCallback(PacketType);
+		// Rumble Packet
+		if (PacketType == (uint8_t)XInputReceiveType::Rumble) {
+			rumble[RumbleLeft.bufferIndex] = rx[RumbleLeft.rxIndex];   // Big weight (Left grip)
+			rumble[RumbleRight.bufferIndex] = rx[RumbleRight.rxIndex];  // Small weight (Right grip)
+		}
+		// LED Packet
+		else if (PacketType == (uint8_t)XInputReceiveType::LEDs) {
+			parseLED(rx[2]);
+		}
+
+		// User-defined receive callback
+		if (recvCallback != nullptr) {
+			recvCallback(PacketType);
+		}
 	}
 
 	return bytesRecv;

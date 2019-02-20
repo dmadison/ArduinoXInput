@@ -114,8 +114,8 @@ public:
 
 	// USB IO
 	boolean connected();
-	size_t send();
-	size_t receive();
+	int send();
+	int receive();
 
 	// Control Input Ranges
 	struct Range { int32_t min; int32_t max; };
@@ -131,7 +131,6 @@ public:
 	void printDebug(Print& output = Serial) const;
 
 private:
-	static const uint32_t USB_Timeout = 12840;  // Packet timeout, in milliseconds
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
 
