@@ -114,8 +114,8 @@ public:
 
 	// USB IO
 	boolean connected();
-	size_t send();
-	size_t receive();
+	int send();
+	int receive();
 
 	// Control Input Ranges
 	struct Range { int32_t min; int32_t max; };

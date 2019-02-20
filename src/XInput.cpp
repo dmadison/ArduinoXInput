@@ -326,19 +326,19 @@ boolean XInputGamepad::connected() {
 }
 
 //Send an update packet to the PC
-size_t XInputGamepad::send() {
+int XInputGamepad::send() {
 	if (!newData) return 0;  // TX data hasn't changed
 #ifdef USB_XINPUT
-	XInputUSB::send(tx, USB_Timeout);
 	newData = false;
+	return XInputUSB::send(tx, USB_Timeout);
 #else
 	#warning "Using debug output for XInput send()"
 	printDebug();
-#endif
 	return sizeof(tx);
+#endif
 }
 
-size_t XInputGamepad::receive() {
+int XInputGamepad::receive() {
 #ifdef USB_XINPUT
 	if (XInputUSB::available() == 0) {
 		return 0;  // No packet available
@@ -346,7 +346,7 @@ size_t XInputGamepad::receive() {
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	size_t bytesRecv = XInputUSB::recv(rx, USB_Timeout);
+	int bytesRecv = XInputUSB::recv(rx, USB_Timeout);
 
 	const uint8_t PacketType = rx[0];
 	
