@@ -14,6 +14,7 @@ XInputGamepad	KEYWORD1
 
 # Enums
 XInputControl	KEYWORD1
+XInputReceiveType	KEYWORD1
 XInputLEDPattern	KEYWORD1
 
 #######################################
@@ -43,8 +44,9 @@ getPlayer	KEYWORD2
 getRumble	KEYWORD2
 getRumbleLeft	KEYWORD2
 getRumbleRight	KEYWORD2
+getLEDPattern	KEYWORD2
 
-getLEDPatternID	KEYWORD2
+setReceiveCallback	KEYWORD2
 
 # USB I/O
 connected	KEYWORD2
@@ -88,6 +90,10 @@ TRIGGER_LEFT	LITERAL1
 TRIGGER_RIGHT	LITERAL1
 JOY_LEFT	LITERAL1
 JOY_RIGHT	LITERAL1
+
+# USB Receive Packet Types
+Rumble	LITERAL1
+LEDs	LITERAL1
 
 # LED Patterns
 Off	LITERAL1

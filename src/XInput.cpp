@@ -167,6 +167,16 @@ struct XInputMap_Rumble {
 static const XInputMap_Rumble RumbleLeft(3, 0);   // Large motor
 static const XInputMap_Rumble RumbleRight(4, 1);  // Small motor
 
+// --------------------------------------------------------
+// XInput USB Receive Callback                            |
+// --------------------------------------------------------
+
+#ifdef USB_XINPUT
+static void XInputLib_Receive_Callback() {
+	XInput.receive();
+}
+#endif
+
 
 // --------------------------------------------------------
 // XInputGamepad Class (API)                              |
@@ -176,6 +186,9 @@ XInputGamepad::XInputGamepad() :
 	tx(), rumble() // Zero initialize arrays
 {
 	reset();
+#ifdef USB_XINPUT
+	XInputUSB::setRecvCallback(XInputLib_Receive_Callback);
+#endif
 }
 
 void XInputGamepad::press(XInputControl button) {
@@ -300,8 +313,8 @@ XInputLEDPattern XInputGamepad::getLEDPattern() const {
 	return ledPattern;
 }
 
-uint8_t XInputGamepad::getLEDPatternID() const {
-	return (uint8_t)ledPattern;
+void XInputGamepad::setReceiveCallback(RecvCallbackType cback) {
+	recvCallback = cback;
 }
 
 boolean XInputGamepad::connected() {
@@ -334,16 +347,24 @@ size_t XInputGamepad::receive() {
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
 	size_t bytesRecv = XInputUSB::recv(rx, USB_Timeout);
+
+	const uint8_t PacketType = rx[0];
 	
 	// Rumble Packet
-	if ((rx[0] == 0x00) & (rx[1] == 0x08)) {
+	if(PacketType == (uint8_t) XInputReceiveType::Rumble) {
 		rumble[RumbleLeft.bufferIndex]  = rx[RumbleLeft.rxIndex];   // Big weight (Left grip)
 		rumble[RumbleRight.bufferIndex] = rx[RumbleRight.rxIndex];  // Small weight (Right grip)
 	}
 	// LED Packet
-	else if (rx[0] == 0x01) {
+	else if (PacketType == (uint8_t) XInputReceiveType::LEDs) {
 		parseLED(rx[2]);
 	}
+
+	// User-defined receive callback
+	if (recvCallback != nullptr) {
+		recvCallback(PacketType);
+	}
+
 	return bytesRecv;
 #else
 	return 0;
@@ -431,6 +452,9 @@ void XInputGamepad::reset() {
 	// Reset rescale ranges
 	setTriggerRange(XInputMap_Trigger::range.min, XInputMap_Trigger::range.max);
 	setJoystickRange(XInputMap_Joystick::range.min, XInputMap_Joystick::range.max);
+
+	// Clear user-set receive callback
+	recvCallback = nullptr;
 }
 
 void XInputGamepad::printDebug(Print &output) const {
