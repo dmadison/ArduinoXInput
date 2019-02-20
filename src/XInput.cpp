@@ -346,7 +346,7 @@ int XInputGamepad::receive() {
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	int bytesRecv = XInputUSB::recv(rx, sizeof(rx));
+	const int bytesRecv = XInputUSB::recv(rx, sizeof(rx));
 
 	// Only process if received 3 or more bytes (min valid packet size)
 	if (bytesRecv >= 3) {
