@@ -348,21 +348,24 @@ int XInputGamepad::receive() {
 	uint8_t rx[8];
 	int bytesRecv = XInputUSB::recv(rx, sizeof(rx));
 
-	const uint8_t PacketType = rx[0];
-	
-	// Rumble Packet
-	if(PacketType == (uint8_t) XInputReceiveType::Rumble) {
-		rumble[RumbleLeft.bufferIndex]  = rx[RumbleLeft.rxIndex];   // Big weight (Left grip)
-		rumble[RumbleRight.bufferIndex] = rx[RumbleRight.rxIndex];  // Small weight (Right grip)
-	}
-	// LED Packet
-	else if (PacketType == (uint8_t) XInputReceiveType::LEDs) {
-		parseLED(rx[2]);
-	}
+	// Only process if received 3 or more bytes (min valid packet size)
+	if (bytesRecv >= 3) {
+		const uint8_t PacketType = rx[0];
 
-	// User-defined receive callback
-	if (recvCallback != nullptr) {
-		recvCallback(PacketType);
+		// Rumble Packet
+		if (PacketType == (uint8_t)XInputReceiveType::Rumble) {
+			rumble[RumbleLeft.bufferIndex] = rx[RumbleLeft.rxIndex];   // Big weight (Left grip)
+			rumble[RumbleRight.bufferIndex] = rx[RumbleRight.rxIndex];  // Small weight (Right grip)
+		}
+		// LED Packet
+		else if (PacketType == (uint8_t)XInputReceiveType::LEDs) {
+			parseLED(rx[2]);
+		}
+
+		// User-defined receive callback
+		if (recvCallback != nullptr) {
+			recvCallback(PacketType);
+		}
 	}
 
 	return bytesRecv;
