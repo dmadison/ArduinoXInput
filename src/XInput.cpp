@@ -330,7 +330,7 @@ int XInputGamepad::send() {
 	if (!newData) return 0;  // TX data hasn't changed
 #ifdef USB_XINPUT
 	newData = false;
-	return XInputUSB::send(tx);
+	return XInputUSB::send(tx, sizeof(tx));
 #else
 	#warning "Using debug output for XInput send()"
 	printDebug();
@@ -346,7 +346,7 @@ int XInputGamepad::receive() {
 
 	// Grab packet and store it in rx array
 	uint8_t rx[8];
-	int bytesRecv = XInputUSB::recv(rx);
+	int bytesRecv = XInputUSB::recv(rx, sizeof(rx));
 
 	const uint8_t PacketType = rx[0];
 	
