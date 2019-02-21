@@ -27,7 +27,7 @@
 #include "XInput.h"
 
 #ifndef USB_XINPUT
-#warning "USB type is not set to XInput in boards menu! Board will not behave as an XInput device"
+#warning "USB type is not set to XInput in boards menu! Using debug print - board will not behave as an XInput device"
 #endif
 
 #if defined(TEENSYDUINO)
@@ -331,7 +331,6 @@ int XInputGamepad::send() {
 	newData = false;
 	return XInputUSB::send(tx, sizeof(tx));
 #else
-	#warning "Using debug output for XInput send()"
 	printDebug();
 	return sizeof(tx);
 #endif
