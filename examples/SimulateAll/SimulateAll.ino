@@ -22,11 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- *  Example:      TestAll
+ *  Example:      SimulateAll
  *  Description:  Automatically activate all possible XInput controls.
  *                Useful to test that everything is functioning properly.
  * 
- *  WARNING: This will spam inputs! Ground pin '0' to stop.
+ *  WARNING: This will spam inputs! Ground pin '0' (RX) to stop.
  *
  */
 
