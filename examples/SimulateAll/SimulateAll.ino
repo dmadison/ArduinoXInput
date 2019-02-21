@@ -108,7 +108,7 @@ void loop() {
 	// Triggers
 	if (t - triggerTimeLast >= TriggerDuration) {  // If enough time has passed, update the triggers
 		XInput.setTrigger(TRIGGER_LEFT, triggerVal);
-		XInput.setTrigger(TRIGGER_RIGHT, ~triggerVal);  // Inverse
+		XInput.setTrigger(TRIGGER_RIGHT, TriggerMax - triggerVal);  // Inverse
 
 		// Increment trigger value based on direction
 		if (triggerDirection == 0) { triggerVal++; }
