@@ -131,13 +131,15 @@ public:
 	void printDebug(Print& output = Serial) const;
 
 private:
+	// Sent Data
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
 
-	RecvCallbackType recvCallback;
+	// Received Data
 	uint8_t player;  // Gamepad player #, buffered
 	uint8_t rumble[2];  // Rumble motor data in, buffered
 	XInputLEDPattern ledPattern;  // LED pattern data in, buffered
+	RecvCallbackType recvCallback;  // User-set callback for received data
 
 	void parseLED(uint8_t leds);  // Parse LED data and set pattern/player data
 
