@@ -136,9 +136,9 @@ private:
 	boolean newData;  // Flag for tx data changed
 
 	// Received Data
-	uint8_t player;  // Gamepad player #, buffered
-	uint8_t rumble[2];  // Rumble motor data in, buffered
-	XInputLEDPattern ledPattern;  // LED pattern data in, buffered
+	volatile uint8_t player;  // Gamepad player #, buffered
+	volatile uint8_t rumble[2];  // Rumble motor data in, buffered
+	volatile XInputLEDPattern ledPattern;  // LED pattern data in, buffered
 	RecvCallbackType recvCallback;  // User-set callback for received data
 
 	void parseLED(uint8_t leds);  // Parse LED data and set pattern/player data

@@ -460,7 +460,7 @@ void XInputGamepad::reset() {
 
 	// Reset received data (rx)
 	player = 0;  // Not connected, no player
-	memset(rumble, 0x00, sizeof(rumble));  // Clear rumble values
+	memset((void*) rumble, 0x00, sizeof(rumble));  // Clear rumble values
 	ledPattern = XInputLEDPattern::Off;  // No LEDs on
 
 	// Reset rescale ranges
