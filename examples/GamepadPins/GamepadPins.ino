@@ -41,9 +41,11 @@
 
 #include <XInput.h>
 
-// Range Setup
+// Setup
 const int ADC_Max = 1023;  // 10 bit
-const boolean UsingTriggerButtons = true;  // set to false if using analog triggers
+const boolean UseLeftJoystick   = true;  // set to false to disable left joystick
+const boolean UseRightJoystick  = true;  // set to false to disable right joystick
+const boolean UseTriggerButtons = true;  // set to false if using analog triggers
 
 // Joystick Pins
 const int Pin_LeftJoyX  = A0;
@@ -78,7 +80,7 @@ const int Pin_DpadRight = 13;
 
 void setup() {
 	// If using buttons for the triggers, use internal pull-up resistors
-	if (UsingTriggerButtons == true) {
+	if (UseTriggerButtons == true) {
 		pinMode(Pin_TriggerL, INPUT_PULLUP);
 		pinMode(Pin_TriggerR, INPUT_PULLUP);
 	}
@@ -152,7 +154,7 @@ void loop() {
 	XInput.setDpad(dpadUp, dpadDown, dpadLeft, dpadRight);
 
 	// Set XInput trigger values
-	if (UsingTriggerButtons == true) {
+	if (UseTriggerButtons == true) {
 		// Read trigger buttons
 		boolean triggerLeft  = !digitalRead(Pin_TriggerL);
 		boolean triggerRight = !digitalRead(Pin_TriggerR);
@@ -171,16 +173,21 @@ void loop() {
 		XInput.setTrigger(TRIGGER_RIGHT, triggerRight);
 	}
 
-	// Read analog joystick values
-	int leftJoyX = analogRead(Pin_LeftJoyX);
-	int leftJoyY = analogRead(Pin_LeftJoyY);
+	// Set left joystick
+	if (UseLeftJoystick == true) {
+		int leftJoyX = analogRead(Pin_LeftJoyX);
+		int leftJoyY = analogRead(Pin_LeftJoyY);
 
-	int rightJoyX = analogRead(Pin_RightJoyX);
-	int rightJoyY = analogRead(Pin_RightJoyY);
+		XInput.setJoystick(JOY_LEFT, leftJoyX, leftJoyY);
+	}
 
-	// Set XInput joystick values
-	XInput.setJoystick(JOY_LEFT, leftJoyX, leftJoyY);
-	XInput.setJoystick(JOY_RIGHT, rightJoyX, rightJoyY);
+	// Set right joystick
+	if (UseRightJoystick == true) {
+		int rightJoyX = analogRead(Pin_RightJoyX);
+		int rightJoyY = analogRead(Pin_RightJoyY);
+
+		XInput.setJoystick(JOY_RIGHT, rightJoyX, rightJoyY);
+	}
 
 	// Send control data to the computer
 	XInput.send();
