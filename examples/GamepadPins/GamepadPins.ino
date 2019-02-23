@@ -42,10 +42,15 @@
 #include <XInput.h>
 
 // Setup
+const boolean UseLeftJoystick   = true;   // set to false to disable left joystick
+const boolean InvertLeftYAxis   = false;  // set to true to use inverted left joy Y
+
+const boolean UseRightJoystick  = true;   // set to false to disable right joystick
+const boolean InvertRightYAxis  = false;  // set to true to use inverted right joy Y
+
+const boolean UseTriggerButtons = true;   // set to false if using analog triggers
+
 const int ADC_Max = 1023;  // 10 bit
-const boolean UseLeftJoystick   = true;  // set to false to disable left joystick
-const boolean UseRightJoystick  = true;  // set to false to disable right joystick
-const boolean UseTriggerButtons = true;  // set to false if using analog triggers
 
 // Joystick Pins
 const int Pin_LeftJoyX  = A0;
@@ -178,6 +183,13 @@ void loop() {
 		int leftJoyX = analogRead(Pin_LeftJoyX);
 		int leftJoyY = analogRead(Pin_LeftJoyY);
 
+		// White lie here... most generic joysticks are typically
+		// inverted by default. If the "Invert" variable is false
+		// then we need to do this transformation.
+		if (InvertLeftYAxis == false) {
+			leftJoyY = ADC_Max - leftJoyY;
+		}
+
 		XInput.setJoystick(JOY_LEFT, leftJoyX, leftJoyY);
 	}
 
@@ -185,6 +197,10 @@ void loop() {
 	if (UseRightJoystick == true) {
 		int rightJoyX = analogRead(Pin_RightJoyX);
 		int rightJoyY = analogRead(Pin_RightJoyY);
+
+		if (InvertRightYAxis == false) {
+			rightJoyY = ADC_Max - rightJoyY;
+		}
 
 		XInput.setJoystick(JOY_RIGHT, rightJoyX, rightJoyY);
 	}
