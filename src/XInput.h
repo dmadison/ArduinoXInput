@@ -29,18 +29,18 @@
 
 #include <Arduino.h>
 
-enum XInputControl {
-	BUTTON_A,
-	BUTTON_B,
-	BUTTON_X,
-	BUTTON_Y,
-	BUTTON_LB,
-	BUTTON_RB,
-	BUTTON_BACK,
-	BUTTON_START,
-	BUTTON_L3,
-	BUTTON_R3,
-	BUTTON_LOGO,
+enum XInputControl : uint8_t {
+	BUTTON_LOGO = 0,
+	BUTTON_A  = 1,
+	BUTTON_B = 2,
+	BUTTON_X = 3,
+	BUTTON_Y = 4,
+	BUTTON_LB = 5,
+	BUTTON_RB = 6,
+	BUTTON_BACK = 7,
+	BUTTON_START = 8,
+	BUTTON_L3 = 9,
+	BUTTON_R3 = 10,
 	DPAD_UP,
 	DPAD_DOWN,
 	DPAD_LEFT,
