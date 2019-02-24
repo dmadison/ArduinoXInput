@@ -41,6 +41,8 @@ void setup() {
 	XInput.setRange(JOY_LEFT, 8, 56);
 	XInput.setRange(JOY_RIGHT, 4, 28);
 
+	XInput.setAutoSend(false);  // Wait for all controls before sending
+
 	while (!classic.connect()) {
 		delay(1000);  // Controller not connected
 	}

@@ -116,6 +116,8 @@ void setup() {
 
 	// Set joystick range to the ADC max
 	XInput.setJoystickRange(0, ADC_Max);
+	
+	XInput.setAutoSend(false);  // Wait for all controls before sending
 }
 
 void loop() {
