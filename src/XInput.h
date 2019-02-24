@@ -29,18 +29,18 @@
 
 #include <Arduino.h>
 
-enum XInputControl {
-	BUTTON_A,
-	BUTTON_B,
-	BUTTON_X,
-	BUTTON_Y,
-	BUTTON_LB,
-	BUTTON_RB,
-	BUTTON_BACK,
-	BUTTON_START,
-	BUTTON_L3,
-	BUTTON_R3,
-	BUTTON_LOGO,
+enum XInputControl : uint8_t {
+	BUTTON_LOGO = 0,
+	BUTTON_A  = 1,
+	BUTTON_B = 2,
+	BUTTON_X = 3,
+	BUTTON_Y = 4,
+	BUTTON_LB = 5,
+	BUTTON_RB = 6,
+	BUTTON_BACK = 7,
+	BUTTON_START = 8,
+	BUTTON_L3 = 9,
+	BUTTON_R3 = 10,
 	DPAD_UP,
 	DPAD_DOWN,
 	DPAD_LEFT,
@@ -131,13 +131,15 @@ public:
 	void printDebug(Print& output = Serial) const;
 
 private:
+	// Sent Data
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
 
-	RecvCallbackType recvCallback;
-	uint8_t player;  // Gamepad player #, buffered
-	uint8_t rumble[2];  // Rumble motor data in, buffered
-	XInputLEDPattern ledPattern;  // LED pattern data in, buffered
+	// Received Data
+	volatile uint8_t player;  // Gamepad player #, buffered
+	volatile uint8_t rumble[2];  // Rumble motor data in, buffered
+	volatile XInputLEDPattern ledPattern;  // LED pattern data in, buffered
+	RecvCallbackType recvCallback;  // User-set callback for received data
 
 	void parseLED(uint8_t leds);  // Parse LED data and set pattern/player data
 

@@ -22,11 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- *  Example:      TestAll
+ *  Example:      SimulateAll
  *  Description:  Automatically activate all possible XInput controls.
  *                Useful to test that everything is functioning properly.
  * 
- *  WARNING: This will spam inputs! Ground pin '0' to stop.
+ *  WARNING: This will spam inputs! Ground pin '0' (RX) to stop.
  *
  */
 
@@ -108,7 +108,7 @@ void loop() {
 	// Triggers
 	if (t - triggerTimeLast >= TriggerDuration) {  // If enough time has passed, update the triggers
 		XInput.setTrigger(TRIGGER_LEFT, triggerVal);
-		XInput.setTrigger(TRIGGER_RIGHT, ~triggerVal);  // Inverse
+		XInput.setTrigger(TRIGGER_RIGHT, TriggerMax - triggerVal);  // Inverse
 
 		// Increment trigger value based on direction
 		if (triggerDirection == 0) { triggerVal++; }
