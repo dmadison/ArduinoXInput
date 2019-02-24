@@ -219,6 +219,7 @@ void XInputGamepad::setButton(XInputControl button, boolean state) {
 		if (state) { tx[buttonData->index] |= buttonData->mask; }  // Press
 		else { tx[buttonData->index] &= ~(buttonData->mask); }  // Release
 		newData = true;
+		autosend();
 	}
 	else {
 		Range * triggerRange = getRangeFromEnum(button);
@@ -236,10 +237,16 @@ void XInputGamepad::setDpad(boolean up, boolean down, boolean left, boolean righ
 	if (up && down) { down = false; }  // Up + Down = Up
 	if (left && right) { left = false; right = false; }  // Left + Right = Neutral
 
+	const boolean autoSendTemp = autoSendOption;  // Save autosend state
+	autoSendOption = false;  // Disable temporarily
+
 	setDpad(DPAD_UP, up);
 	setDpad(DPAD_DOWN, down);
 	setDpad(DPAD_LEFT, left);
 	setDpad(DPAD_RIGHT, right);
+
+	autoSendOption = autoSendTemp;  // Re-enable from option
+	autosend();
 }
 
 void XInputGamepad::setTrigger(XInputControl trigger, int32_t val) {
@@ -251,6 +258,7 @@ void XInputGamepad::setTrigger(XInputControl trigger, int32_t val) {
 
 	tx[triggerData->index] = val;
 	newData = true;
+	autosend();
 }
 
 void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
@@ -269,12 +277,18 @@ void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	tx[joyData->y_high] = highByte(y);
 
 	newData = true;
+	autosend();
 }
 
 void XInputGamepad::releaseAll() {
 	const uint8_t offset = 2;  // Skip message type and packet size
 	memset(tx + offset, 0x00, sizeof(tx) - offset);  // Clear TX array
 	newData = true;  // Data changed and is unsent
+	autosend();
+}
+
+void XInputGamepad::setAutoSend(boolean a) {
+	autoSendOption = a;
 }
 
 boolean XInputGamepad::getButton(XInputControl button) const {
@@ -467,8 +481,9 @@ void XInputGamepad::reset() {
 	setTriggerRange(XInputMap_Trigger::range.min, XInputMap_Trigger::range.max);
 	setJoystickRange(XInputMap_Joystick::range.min, XInputMap_Joystick::range.max);
 
-	// Clear user-set receive callback
+	// Clear user-set options
 	recvCallback = nullptr;
+	autoSendOption = true;
 }
 
 void XInputGamepad::printDebug(Print &output) const {
