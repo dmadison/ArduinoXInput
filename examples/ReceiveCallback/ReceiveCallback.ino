@@ -55,8 +55,6 @@ void loop() {
 	else {
 		XInput.release(TRIGGER_RIGHT);
 	}
-
-	XInput.send();
 }
 
 void rumbleCallback(uint8_t packetType) {

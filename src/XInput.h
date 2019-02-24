@@ -92,6 +92,9 @@ public:
 
 	void releaseAll();
 
+	// Auto-Send Data
+	void setAutoSend(boolean a);
+
 	// Read Control Surfaces
 	boolean getButton(XInputControl button) const;
 	boolean getDpad(XInputControl dpad) const;
@@ -134,6 +137,11 @@ private:
 	// Sent Data
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
+	boolean autoSendOption;  // Flag for automatically sending data
+
+	void inline autosend() {
+		if (autoSendOption) { send(); }
+	}
 
 	// Received Data
 	volatile uint8_t player;  // Gamepad player #, buffered

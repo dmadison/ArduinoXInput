@@ -74,6 +74,7 @@ double angle = 0.0;
 
 void setup() {
 	pinMode(SafetyPin, INPUT_PULLUP);
+	XInput.setAutoSend(false);  // Wait for all controls before sending
 }
 
 void loop() {

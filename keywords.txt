@@ -32,6 +32,8 @@ setJoystick	KEYWORD2
 
 releaseAll	KEYWORD2
 
+setAutoSend	KEYWORD2
+
 # Read Control Data
 getButton	KEYWORD2
 getDpad	KEYWORD2

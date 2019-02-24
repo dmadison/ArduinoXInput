@@ -36,10 +36,8 @@ void setup() {
 
 void loop() {
 	XInput.press(BUTTON_A);
-	XInput.send();
 	delay(1000);
 
 	XInput.release(BUTTON_A);
-	XInput.send();
 	delay(1000);
 }
