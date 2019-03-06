@@ -79,9 +79,9 @@ public:
 	XInputGamepad();
 
 	// Set Control Surfaces
-	void press(XInputControl button);
-	void release(XInputControl button);
-	void setButton(XInputControl button, boolean state);
+	void press(uint8_t button);
+	void release(uint8_t button);
+	void setButton(uint8_t button, boolean state);
 
 	void setDpad(XInputControl pad, boolean state);
 	void setDpad(boolean up, boolean down, boolean left, boolean right);
@@ -96,7 +96,7 @@ public:
 	void setAutoSend(boolean a);
 
 	// Read Control Surfaces
-	boolean getButton(XInputControl button) const;
+	boolean getButton(uint8_t button) const;
 	boolean getDpad(XInputControl dpad) const;
 	uint8_t getTrigger(XInputControl trigger) const;
 	int16_t getJoystickX(XInputControl joy) const;

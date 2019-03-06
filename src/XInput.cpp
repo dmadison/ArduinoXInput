@@ -203,16 +203,16 @@ XInputGamepad::XInputGamepad() :
 #endif
 }
 
-void XInputGamepad::press(XInputControl button) {
+void XInputGamepad::press(uint8_t button) {
 	setButton(button, true);
 }
 
-void XInputGamepad::release(XInputControl button) {
+void XInputGamepad::release(uint8_t button) {
 	setButton(button, false);
 }
 
-void XInputGamepad::setButton(XInputControl button, boolean state) {
-	const XInputMap_Button * buttonData = getButtonFromEnum(button);
+void XInputGamepad::setButton(uint8_t button, boolean state) {
+	const XInputMap_Button * buttonData = getButtonFromEnum((XInputControl) button);
 	if (buttonData != nullptr) {
 		if (getButton(button) == state) return;  // Button hasn't changed
 
@@ -222,9 +222,9 @@ void XInputGamepad::setButton(XInputControl button, boolean state) {
 		autosend();
 	}
 	else {
-		Range * triggerRange = getRangeFromEnum(button);
+		Range * triggerRange = getRangeFromEnum((XInputControl) button);
 		if (triggerRange == nullptr) return;  // Not a trigger (or joystick, but the trigger function will ignore that)
-		setTrigger(button, state ? triggerRange->max : triggerRange->min);  // Treat trigger like a button
+		setTrigger((XInputControl) button, state ? triggerRange->max : triggerRange->min);  // Treat trigger like a button
 	}
 }
 
@@ -291,8 +291,8 @@ void XInputGamepad::setAutoSend(boolean a) {
 	autoSendOption = a;
 }
 
-boolean XInputGamepad::getButton(XInputControl button) const {
-	const XInputMap_Button * buttonData = getButtonFromEnum(button);
+boolean XInputGamepad::getButton(uint8_t button) const {
+	const XInputMap_Button * buttonData = getButtonFromEnum((XInputControl) button);
 	if (buttonData == nullptr) return 0;  // Not a button
 	return tx[buttonData->index] & buttonData->mask;
 }
