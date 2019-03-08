@@ -43,6 +43,8 @@ void setup() {
 
 	XInput.setAutoSend(false);  // Wait for all controls before sending
 
+	XInput.begin();
+
 	while (!classic.connect()) {
 		delay(1000);  // Controller not connected
 	}

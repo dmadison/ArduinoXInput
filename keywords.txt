@@ -21,6 +21,10 @@ XInputLEDPattern	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+# Setup
+begin	KEYWORD2
+reset	KEYWORD2
+
 # Set Control Data
 press	KEYWORD2
 release	KEYWORD2
@@ -61,7 +65,6 @@ setJoystickRange	KEYWORD2
 setRange	KEYWORD2
 
 # Other
-reset	KEYWORD2
 printDebug	KEYWORD2
 
 #######################################

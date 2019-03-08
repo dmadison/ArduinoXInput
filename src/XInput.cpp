@@ -203,6 +203,10 @@ XInputGamepad::XInputGamepad() :
 #endif
 }
 
+void XInputGamepad::begin() {
+	// Empty for now
+}
+
 void XInputGamepad::press(uint8_t button) {
 	setButton(button, true);
 }

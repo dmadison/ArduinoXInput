@@ -78,6 +78,8 @@ class XInputGamepad {
 public:
 	XInputGamepad();
 
+	void begin();
+
 	// Set Control Surfaces
 	void press(uint8_t button);
 	void release(uint8_t button);
