@@ -10,7 +10,7 @@
 XInput	KEYWORD1
 
 # Classes
-XInputGamepad	KEYWORD1
+XInputController	KEYWORD1
 
 # Enums
 XInputControl	KEYWORD1

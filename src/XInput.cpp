@@ -119,11 +119,11 @@ const XInputMap_Button * getButtonFromEnum(XInputControl ctrl) {
 struct XInputMap_Trigger {
 	constexpr XInputMap_Trigger(uint8_t i)
 		: index(i) {}
-	static const XInputGamepad::Range range;
+	static const XInputController::Range range;
 	const uint8_t index;
 };
 
-const XInputGamepad::Range XInputMap_Trigger::range = { 0, 255 };  // uint8_t
+const XInputController::Range XInputMap_Trigger::range = { 0, 255 };  // uint8_t
 
 static const XInputMap_Trigger Map_TriggerLeft(4);
 static const XInputMap_Trigger Map_TriggerRight(5);
@@ -144,14 +144,14 @@ const XInputMap_Trigger * getTriggerFromEnum(XInputControl ctrl) {
 struct XInputMap_Joystick {
 	constexpr XInputMap_Joystick(uint8_t xl, uint8_t xh, uint8_t yl, uint8_t yh)
 		: x_low(xl), x_high(xh), y_low(yl), y_high(yh) {}
-	static const XInputGamepad::Range range;
+	static const XInputController::Range range;
 	const uint8_t x_low;
 	const uint8_t x_high;
 	const uint8_t y_low;
 	const uint8_t y_high;
 };
 
-const XInputGamepad::Range XInputMap_Joystick::range = { -32768, 32767 };  // int16_t
+const XInputController::Range XInputMap_Joystick::range = { -32768, 32767 };  // int16_t
 
 static const XInputMap_Joystick Map_JoystickLeft(6, 7, 8, 9);
 static const XInputMap_Joystick Map_JoystickRight(10, 11, 12, 13);
@@ -191,10 +191,10 @@ static void XInputLib_Receive_Callback() {
 
 
 // --------------------------------------------------------
-// XInputGamepad Class (API)                              |
+// XInputController Class (API)                           |
 // --------------------------------------------------------
 
-XInputGamepad::XInputGamepad() :
+XInputController::XInputController() :
 	tx(), rumble() // Zero initialize arrays
 {
 	reset();
@@ -203,19 +203,19 @@ XInputGamepad::XInputGamepad() :
 #endif
 }
 
-void XInputGamepad::begin() {
+void XInputController::begin() {
 	// Empty for now
 }
 
-void XInputGamepad::press(uint8_t button) {
+void XInputController::press(uint8_t button) {
 	setButton(button, true);
 }
 
-void XInputGamepad::release(uint8_t button) {
+void XInputController::release(uint8_t button) {
 	setButton(button, false);
 }
 
-void XInputGamepad::setButton(uint8_t button, boolean state) {
+void XInputController::setButton(uint8_t button, boolean state) {
 	const XInputMap_Button * buttonData = getButtonFromEnum((XInputControl) button);
 	if (buttonData != nullptr) {
 		if (getButton(button) == state) return;  // Button hasn't changed
@@ -232,11 +232,11 @@ void XInputGamepad::setButton(uint8_t button, boolean state) {
 	}
 }
 
-void XInputGamepad::setDpad(XInputControl pad, boolean state) {
+void XInputController::setDpad(XInputControl pad, boolean state) {
 	setButton(pad, state);
 }
 
-void XInputGamepad::setDpad(boolean up, boolean down, boolean left, boolean right) {
+void XInputController::setDpad(boolean up, boolean down, boolean left, boolean right) {
 	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
 	if (up && down) { down = false; }  // Up + Down = Up
 	if (left && right) { left = false; right = false; }  // Left + Right = Neutral
@@ -253,7 +253,7 @@ void XInputGamepad::setDpad(boolean up, boolean down, boolean left, boolean righ
 	autosend();
 }
 
-void XInputGamepad::setTrigger(XInputControl trigger, int32_t val) {
+void XInputController::setTrigger(XInputControl trigger, int32_t val) {
 	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
 	if (triggerData == nullptr) return;  // Not a trigger
 
@@ -265,7 +265,7 @@ void XInputGamepad::setTrigger(XInputControl trigger, int32_t val) {
 	autosend();
 }
 
-void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
+void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
@@ -284,70 +284,70 @@ void XInputGamepad::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	autosend();
 }
 
-void XInputGamepad::releaseAll() {
+void XInputController::releaseAll() {
 	const uint8_t offset = 2;  // Skip message type and packet size
 	memset(tx + offset, 0x00, sizeof(tx) - offset);  // Clear TX array
 	newData = true;  // Data changed and is unsent
 	autosend();
 }
 
-void XInputGamepad::setAutoSend(boolean a) {
+void XInputController::setAutoSend(boolean a) {
 	autoSendOption = a;
 }
 
-boolean XInputGamepad::getButton(uint8_t button) const {
+boolean XInputController::getButton(uint8_t button) const {
 	const XInputMap_Button * buttonData = getButtonFromEnum((XInputControl) button);
 	if (buttonData == nullptr) return 0;  // Not a button
 	return tx[buttonData->index] & buttonData->mask;
 }
 
-boolean XInputGamepad::getDpad(XInputControl dpad) const {
+boolean XInputController::getDpad(XInputControl dpad) const {
 	return getButton(dpad);
 }
 
-uint8_t XInputGamepad::getTrigger(XInputControl trigger) const {
+uint8_t XInputController::getTrigger(XInputControl trigger) const {
 	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
 	if (triggerData == nullptr) return 0;  // Not a trigger
 	return tx[triggerData->index];
 }
 
-int16_t XInputGamepad::getJoystickX(XInputControl joy) const {
+int16_t XInputController::getJoystickX(XInputControl joy) const {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return 0;  // Not a joystick
 	return (tx[joyData->x_high] << 8) | tx[joyData->x_low];
 }
 
-int16_t XInputGamepad::getJoystickY(XInputControl joy) const {
+int16_t XInputController::getJoystickY(XInputControl joy) const {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return 0;  // Not a joystick
 	return (tx[joyData->y_high] << 8) | tx[joyData->y_low];
 }
 
-uint8_t XInputGamepad::getPlayer() const {
+uint8_t XInputController::getPlayer() const {
 	return player;
 }
 
-uint16_t XInputGamepad::getRumble() const {
+uint16_t XInputController::getRumble() const {
 	return rumble[RumbleLeft.bufferIndex] << 8 | rumble[RumbleRight.bufferIndex];
 }
 
-uint8_t XInputGamepad::getRumbleLeft() const {
+uint8_t XInputController::getRumbleLeft() const {
 	return rumble[RumbleLeft.bufferIndex];
 }
 
-uint8_t XInputGamepad::getRumbleRight() const {
+uint8_t XInputController::getRumbleRight() const {
 	return rumble[RumbleRight.bufferIndex];
 }
 
-XInputLEDPattern XInputGamepad::getLEDPattern() const {
+XInputLEDPattern XInputController::getLEDPattern() const {
 	return ledPattern;
 }
 
-void XInputGamepad::setReceiveCallback(RecvCallbackType cback) {
+void XInputController::setReceiveCallback(RecvCallbackType cback) {
 	recvCallback = cback;
 }
 
-boolean XInputGamepad::connected() {
+boolean XInputController::connected() {
 #ifdef USB_XINPUT
 	return XInputUSB::connected();
 #else
@@ -356,7 +356,7 @@ boolean XInputGamepad::connected() {
 }
 
 //Send an update packet to the PC
-int XInputGamepad::send() {
+int XInputController::send() {
 	if (!newData) return 0;  // TX data hasn't changed
 #ifdef USB_XINPUT
 	newData = false;
@@ -367,7 +367,7 @@ int XInputGamepad::send() {
 #endif
 }
 
-int XInputGamepad::receive() {
+int XInputController::receive() {
 #ifdef USB_XINPUT
 	if (XInputUSB::available() == 0) {
 		return 0;  // No packet available
@@ -403,7 +403,7 @@ int XInputGamepad::receive() {
 #endif
 }
 
-void XInputGamepad::parseLED(uint8_t leds) {
+void XInputController::parseLED(uint8_t leds) {
 	if (leds > 0x0D) return;  // Not a known pattern
 
 	ledPattern = (XInputLEDPattern) leds;  // Save pattern
@@ -432,7 +432,7 @@ void XInputGamepad::parseLED(uint8_t leds) {
 	}
 }
 
-XInputGamepad::Range * XInputGamepad::getRangeFromEnum(XInputControl ctrl) {
+XInputController::Range * XInputController::getRangeFromEnum(XInputControl ctrl) {
 	switch (ctrl) {
 	case(TRIGGER_LEFT): return &rangeTrigLeft;
 	case(TRIGGER_RIGHT): return &rangeTrigRight;
@@ -442,24 +442,24 @@ XInputGamepad::Range * XInputGamepad::getRangeFromEnum(XInputControl ctrl) {
 	}
 }
 
-int32_t XInputGamepad::rescaleInput(int32_t val, Range in, Range out) {
+int32_t XInputController::rescaleInput(int32_t val, Range in, Range out) {
 	if (val <= in.min) return out.min;  // Out of range -
 	if (val >= in.max) return out.max;  // Out of range +
 	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	return map(val, in.min, in.max, out.min, out.max);
 }
 
-void XInputGamepad::setTriggerRange(int32_t rangeMin, int32_t rangeMax) {
+void XInputController::setTriggerRange(int32_t rangeMin, int32_t rangeMax) {
 	setRange(TRIGGER_LEFT, rangeMin, rangeMax);
 	setRange(TRIGGER_RIGHT, rangeMin, rangeMax);
 }
 
-void XInputGamepad::setJoystickRange(int32_t rangeMin, int32_t rangeMax) {
+void XInputController::setJoystickRange(int32_t rangeMin, int32_t rangeMax) {
 	setRange(JOY_LEFT, rangeMin, rangeMax);
 	setRange(JOY_RIGHT, rangeMin, rangeMax);
 }
 
-void XInputGamepad::setRange(XInputControl ctrl, int32_t rangeMin, int32_t rangeMax) {
+void XInputController::setRange(XInputControl ctrl, int32_t rangeMin, int32_t rangeMax) {
 	if (rangeMin >= rangeMax) return;  // Error: Max < Min
 
 	Range * range = getRangeFromEnum(ctrl);
@@ -470,7 +470,7 @@ void XInputGamepad::setRange(XInputControl ctrl, int32_t rangeMin, int32_t range
 }
 
 // Resets class back to initial values
-void XInputGamepad::reset() {
+void XInputController::reset() {
 	// Reset control data (tx)
 	releaseAll();  // Clear TX buffer
 	tx[0] = 0x00;  // Set tx message type
@@ -490,7 +490,7 @@ void XInputGamepad::reset() {
 	autoSendOption = true;
 }
 
-void XInputGamepad::printDebug(Print &output) const {
+void XInputController::printDebug(Print &output) const {
 	const char fillCharacter = '_';
 
 	char buffer[80];
@@ -546,4 +546,4 @@ void XInputGamepad::printDebug(Print &output) const {
 	output.println(buffer);
 }
 
-XInputGamepad XInput;
+XInputController XInput;

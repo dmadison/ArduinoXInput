@@ -74,9 +74,9 @@ enum class XInputLEDPattern {
 };
 
 
-class XInputGamepad {
+class XInputController {
 public:
-	XInputGamepad();
+	XInputController();
 
 	void begin();
 
@@ -159,6 +159,6 @@ private:
 	int32_t rescaleInput(int32_t val, Range in, Range out);
 };
 
-extern XInputGamepad XInput;
+extern XInputController XInput;
 
 #endif
