@@ -45,6 +45,8 @@ The following boards packages are available:
 
 * #### [Teensy 3 Boards](https://www.github.com/dmadison/ArduinoXInput_Teensy)
   Includes an 'XInput' USB mode for the Teensy 3.1, 3.2, 3.5, 3.6, and LC microcontrollers. Requires a preexisting Teensyduino installation.
+  
+For information on how to add support for another Arduino-compatible board with native USB support, see [the documentation on the USB API](extras/XInputUSB_API.md).
 
 ## License
 
