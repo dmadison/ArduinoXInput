@@ -40,8 +40,11 @@ To function as an XInput device, you *must* use a compatible boards package with
 
 The following boards packages are available:
 
-* #### [Arduino AVR Boards](https://www.github.com/dmadison/ArduinoXInput_AVR)
+* #### [Arduino AVR Core Boards](https://www.github.com/dmadison/ArduinoXInput_AVR)
   Modifies the Arduino AVR core to emulate an XInput device. Includes support for the Arduino Leonardo, Micro, Yun, and more. 
+
+* #### [SparkFun AVR Boards](https://www.github.com/dmadison/ArduinoXInput_SparkFun)
+  Provides support for the MaKey MaKey, Pro Micro, Fio, Qduino Mini, and LilyPad USB Plus. Requires the XInput AVR Core boards.
 
 * #### [Teensy 3 Boards](https://www.github.com/dmadison/ArduinoXInput_Teensy)
   Includes an 'XInput' USB mode for the Teensy 3.1, 3.2, 3.5, 3.6, and LC microcontrollers. Requires a preexisting Teensyduino installation.

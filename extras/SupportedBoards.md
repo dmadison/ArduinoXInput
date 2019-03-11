@@ -16,6 +16,16 @@ Here is a complete list of all of the currently supported boards. Each header li
 * [LilyPad Arduino USB](https://www.sparkfun.com/products/12049)
 * [Linino One](https://store.arduino.cc/usa/linino-one)
 
+## [SparkFun AVR Boards](https://github.com/dmadison/ArduinoXInput_Sparkfun)
+(Note: requires the XInput AVR core)
+
+* [MaKey MaKey](https://www.sparkfun.com/products/11511)
+* [Pro Micro 3.3V](https://www.sparkfun.com/products/10999)
+* [Pro Micro 5V](https://www.sparkfun.com/products/11098)
+* [Fio v3](https://www.sparkfun.com/products/11520)
+* [Qduino Mini](https://www.sparkfun.com/products/13614)
+* [LilyPad USB Plus](https://www.sparkfun.com/products/14346)
+
 ## [Teensy 3 Boards](https://github.com/dmadison/ArduinoXInput_Teensy/)
 
 * [Teensy 3.6](https://www.pjrc.com/store/teensy36.html)
