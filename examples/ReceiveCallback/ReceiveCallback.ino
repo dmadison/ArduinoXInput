@@ -44,6 +44,8 @@ void setup() {
 	// Set callback function. Function must have a 'void' return type
 	// and take a single uint8_t as an argument
 	XInput.setReceiveCallback(rumbleCallback);
+
+	XInput.begin();
 }
 
 void loop() {

@@ -114,10 +114,10 @@ void setup() {
 	pinMode(Pin_DpadLeft, INPUT_PULLUP);
 	pinMode(Pin_DpadRight, INPUT_PULLUP);
 
-	// Set joystick range to the ADC max
-	XInput.setJoystickRange(0, ADC_Max);
-	
+	XInput.setJoystickRange(0, ADC_Max);  // Set joystick range to the ADC
 	XInput.setAutoSend(false);  // Wait for all controls before sending
+
+	XInput.begin();
 }
 
 void loop() {

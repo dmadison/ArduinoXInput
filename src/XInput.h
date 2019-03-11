@@ -74,9 +74,11 @@ enum class XInputLEDPattern {
 };
 
 
-class XInputGamepad {
+class XInputController {
 public:
-	XInputGamepad();
+	XInputController();
+
+	void begin();
 
 	// Set Control Surfaces
 	void press(uint8_t button);
@@ -157,6 +159,6 @@ private:
 	int32_t rescaleInput(int32_t val, Range in, Range out);
 };
 
-extern XInputGamepad XInput;
+extern XInputController XInput;
 
 #endif
