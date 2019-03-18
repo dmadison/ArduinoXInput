@@ -50,7 +50,7 @@
 	#ifdef USB_XINPUT
 		#warning "Unknown board. XInput may not work properly."
 	#else
-		#error "This board does not support XInput!"
+		#error "This board does not support XInput! You must use a USB capable board with the corresponding XInput boards package. See the list of supported boards in the 'extras' folder for more information"
 	#endif
 #endif /* if supported board */
 
