@@ -45,7 +45,7 @@ before_install:
     # Teensy Boards
   - if [[ $BOARD == *"teensy"* ]]; then
       git clone https://github.com/dmadison/ArduinoXInput_Teensy.git;
-      \cp -r ArduinoXInput_Teensy/teensy $BOARDS_DESTINATION;
+      sudo \cp -r ArduinoXInput_Teensy/teensy $BOARDS_DESTINATION;
       rm -rf ArduinoXInput_Teensy;
     fi
 
