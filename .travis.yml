@@ -1,7 +1,7 @@
 language: C
 env:
   global:
-    - IDE_VERSION=1.8.8
+    - IDE_VERSION=1.8.1
     - TEENSY_VERSION=145
     - BOARDS_DESTINATION=/usr/local/share/arduino/hardware
 matrix:
