@@ -1,0 +1,80 @@
+language: C
+env:
+  global:
+    - IDE_VERSION=1.8.1
+    - TEENSY_VERSION=145
+    - BOARDS_DESTINATION=/usr/local/share/arduino/hardware
+matrix:
+  include:
+    - name: "Arduino Leonardo (Serial)"
+      env: BOARD=arduino:avr:leonardo
+    - name: "Arduino Leonardo (XInput)"
+      env: BOARD=xinput:avr:leonardo
+    - name: "Teensy LC"
+      env: BOARD=teensy:avr:teensyLC:usb=xinput,speed=48,opt=osstd,keys=en-us
+
+before_install:
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
+  - sleep 3
+  - export DISPLAY=:1.0
+
+  # Install Arduino IDE
+  - wget http://downloads.arduino.cc/arduino-$IDE_VERSION-linux64.tar.xz
+  - tar xf arduino-$IDE_VERSION-linux64.tar.xz
+  - sudo mv arduino-$IDE_VERSION /usr/local/share/arduino
+  - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
+  - rm arduino-$IDE_VERSION-linux64.tar.xz
+
+  # Install Teensyduino
+  - if [[ $BOARD == *"teensy"* ]]; then
+      wget https://www.pjrc.com/teensy/td_$TEENSY_VERSION/TeensyduinoInstall.linux64;
+      chmod +x ./TeensyduinoInstall.linux64;
+      sudo ./TeensyduinoInstall.linux64 --dir=/usr/local/share/arduino;
+      rm ./TeensyduinoInstall.linux64;
+    fi
+    
+  # Install Boards Packages
+    # AVR Core
+  - if [[ $BOARD == *"xinput:avr"* ]]; then
+      git clone https://github.com/dmadison/ArduinoXInput_AVR.git;
+      mkdir -p $BOARDS_DESTINATION/xinput/avr;
+      mv ArduinoXInput_AVR/* $BOARDS_DESTINATION/xinput/avr;
+      rm -rf ArduinoXInput_AVR;
+    fi
+  
+    # Teensy Boards
+  - if [[ $BOARD == *"teensy"* ]]; then
+      git clone https://github.com/dmadison/ArduinoXInput_Teensy.git;
+      sudo \cp -r ArduinoXInput_Teensy/teensy $BOARDS_DESTINATION;
+      rm -rf ArduinoXInput_Teensy;
+    fi
+
+  # Install Libraries
+  - arduino --install-library "Nintendo Extension Ctrl:0.7.2"
+
+  # Sketch Compiling Functions
+  - CYAN="\033[36m"; NOC="\033[0m";
+  - buildSketchPath() {
+      sktch=${1##*/examples/};
+      sktch=${sktch%/*.ino};
+      echo -e "\n${CYAN}Building sketch $sktch.ino${NOC}";
+      arduino --verify --board $BOARD "$1";
+    }
+  - buildExampleSketch() {
+      buildSketchPath "$PWD/examples/$1/$1.ino";
+    }
+
+install:
+  - ln -s $PWD /usr/local/share/arduino/libraries/ArduinoXInput
+
+script:
+  - buildExampleSketch Blink
+  - buildExampleSketch GamepadPins
+  - buildExampleSketch ReceiveCallback
+  - buildExampleSketch SimulateAll
+  - buildExampleSketch WiiClassicController
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
