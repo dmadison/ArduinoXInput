@@ -1,4 +1,5 @@
-# Arduino XInput Library [![Build Status](https://travis-ci.org/dmadison/ArduinoXInput.svg?branch=master)](https://travis-ci.org/dmadison/ArduinoXInput)
+# Arduino XInput Library 
+[![arduino-library-badge](https://www.ardu-badge.com/badge/XInput.svg?)](https://www.ardu-badge.com/XInput) [![Build Status](https://travis-ci.org/dmadison/ArduinoXInput.svg?branch=master)](https://travis-ci.org/dmadison/ArduinoXInput)
 
 This library lets you easily emulate an Xbox 360 controller using a USB-capable Arduino microcontroller.
 
