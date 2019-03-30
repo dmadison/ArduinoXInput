@@ -36,7 +36,9 @@
  *                  * static void setRecvCallback(void(*callback)(void))
  *
  *                If the example is running properly, the controller's
- *                'A' button should toggle on and off every 2 seconds.
+ *                'A' button should toggle on and off every 2 seconds
+ *                and the built-in LED should turn on when rumble data
+ *                is received.
  */
 
 #ifndef USB_XINPUT
@@ -44,11 +46,12 @@
 #else
 
 uint8_t txData[20] = { 0x00, 0x14, 0x00 };
-uint8_t rxData[8]  = { 0x00 };
-
 boolean buttonState = false;
 
 void setup() {
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, LOW);
+
 	while (!XInputUSB::connected()) {}  // wait for connection
 	XInputUSB::setRecvCallback(receiveCallback);
 }
@@ -75,7 +78,13 @@ void setButtonA(uint8_t * ptr, boolean state) {
 
 void receiveCallback() {
 	if (XInputUSB::available() > 0) {
-		XInputUSB::recv(rxData, sizeof(rxData));
+		uint8_t rxData[8] = { 0x00 };
+		const int success = XInputUSB::recv(rxData, sizeof(rxData));
+
+		if (success > 5 && rxData[0] == 0x00) {  // rumble packet
+			boolean rumbling = (rxData[3] > 0 || rxData[4] > 0 );
+			digitalWrite(LED_BUILTIN, rumbling);
+		}
 	}
 }
 
