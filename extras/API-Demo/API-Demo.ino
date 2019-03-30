@@ -49,8 +49,10 @@ uint8_t txData[20] = { 0x00, 0x14, 0x00 };
 boolean buttonState = false;
 
 void setup() {
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, LOW);
+	#ifdef LED_BUILTIN
+		pinMode(LED_BUILTIN, OUTPUT);
+		digitalWrite(LED_BUILTIN, LOW);
+	#endif
 
 	while (!XInputUSB::connected()) {}  // wait for connection
 	XInputUSB::setRecvCallback(receiveCallback);
@@ -82,8 +84,10 @@ void receiveCallback() {
 		const int success = XInputUSB::recv(rxData, sizeof(rxData));
 
 		if (success > 5 && rxData[0] == 0x00) {  // rumble packet
-			boolean rumbling = (rxData[3] > 0 || rxData[4] > 0 );
-			digitalWrite(LED_BUILTIN, rumbling);
+			#ifdef LED_BUILTIN
+				boolean rumbling = (rxData[3] > 0 || rxData[4] > 0 );
+				digitalWrite(LED_BUILTIN, rumbling);
+			#endif
 		}
 	}
 }
