@@ -44,10 +44,9 @@
 #else
 
 uint8_t txData[20] = { 0x00, 0x14, 0x00 };
-boolean buttonState = false;
+uint8_t rxData[8]  = { 0x00 };
 
-volatile uint8_t rxData[8]  = { 0x00 };
-volatile uint8_t playerNum = 0;
+boolean buttonState = false;
 
 void setup() {
 	while (!XInputUSB::connected()) {}  // wait for connection
@@ -55,52 +54,28 @@ void setup() {
 }
 
 void loop() {
-	// Set D-PAD based on player number (test receive)
-	const uint8_t pNum = playerNum;
-	if (pNum != 0) {
-		setPlayerControl(pNum);
-		playerNum = 0;
-	}
-
-	// Toggle button 'A' (test send)
 	buttonState = !buttonState;
-	setButtonA(buttonState);
+	setButtonA(txData, buttonState);
 	XInputUSB::send(txData, sizeof(txData));
 	
 	delay(1000);
 }
 
-void setButton(uint8_t index, uint8_t position, uint8_t state) {
+void setButtonA(uint8_t * ptr, boolean state) {
+	const uint8_t ButtonIndex = 3;
+	const uint8_t ButtonPosition = 4;
+
 	if (state == true) {
-		txData[index] |= (1 << position);
+		ptr[ButtonIndex] |= (1 << ButtonPosition);
 	}
 	else {
-		txData[index] &= ~(1 << position);
+		ptr[ButtonIndex] &= ~(1 << ButtonPosition);
 	}
-}
-
-void setButtonA(boolean state) {
-	setButton(3, 4, state);
-}
-
-void setPlayerControl(uint8_t num) {
-	// Player 1: Dpad Up
-	// Player 2; Dpad Down
-	// Player 3: Dpad Left
-	// Player 4: Dpad Right
-	setButton(2, num - 1, true);
 }
 
 void receiveCallback() {
 	if (XInputUSB::available() > 0) {
-		const int success = XInputUSB::recv((uint8_t*) rxData, sizeof(rxData));
-
-		if (success > 0 && rxData[0] == 0x01) {  // LED Packet
-			uint8_t ledPattern = rxData[2];
-			if (ledPattern >= 2 && ledPattern <= 9) {  // Player # Pattern
-				playerNum = ((ledPattern - 2) % 4) + 1;  // Player # 1-4
-			}
-		}
+		XInputUSB::recv(rxData, sizeof(rxData));
 	}
 }
 
