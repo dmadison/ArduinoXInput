@@ -84,3 +84,5 @@ Here are my two API implementations for reference:
 
 * [Arduino AVR Boards](https://github.com/dmadison/ArduinoXInput_AVR/blob/master/cores/arduino/xinput/USB_XInput_API.cpp)
 * [Teensy 3 Boards](https://github.com/dmadison/ArduinoXInput_Teensy/blob/master/teensy/avr/cores/teensy3/usb_xinput.c)
+
+I've also included a test sketch for validating an XInputUSB API implementation without the library, which you can find [here](API-Demo/API-Demo.ino).
