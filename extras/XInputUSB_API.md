@@ -19,7 +19,7 @@ Here is the C++ API header in all of its glory:
 
 class XInputUSB {
 public:
-	static bool connected(void);
+	static boolean connected(void);
 	static uint8_t available(void);
 	static int send(const void *buffer, uint8_t nbytes);
 	static int recv(void *buffer, uint8_t nbytes);
@@ -33,7 +33,7 @@ Note the `USB_XINPUT` preprocessor definition. This definition is what tells the
 
 The API consists of five core static functions of the `XInputUSB` class that pass the USB data back and forth from the bus to the library. Here is the breakdown:
 
-### bool connected(void)
+### boolean connected(void)
 
 The `connected` function returns the state of the USB interface with respect to XInput. If the device is connected to a host and functional this should return `true`. If the device is disconnected this should return `false`.
 
@@ -84,3 +84,5 @@ Here are my two API implementations for reference:
 
 * [Arduino AVR Boards](https://github.com/dmadison/ArduinoXInput_AVR/blob/master/cores/arduino/xinput/USB_XInput_API.cpp)
 * [Teensy 3 Boards](https://github.com/dmadison/ArduinoXInput_Teensy/blob/master/teensy/avr/cores/teensy3/usb_xinput.c)
+
+I've also included a test sketch for validating an XInputUSB API implementation without the library, which you can find [here](API-Demo/API-Demo.ino).
