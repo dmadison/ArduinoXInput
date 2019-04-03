@@ -140,6 +140,8 @@ private:
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
 	boolean autoSendOption;  // Flag for automatically sending data
+	
+	void setJoystickDirect(XInputControl joy, int16_t x, int16_t y);
 
 	void inline autosend() {
 		if (autoSendOption) { send(); }
