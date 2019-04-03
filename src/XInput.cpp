@@ -236,10 +236,12 @@ void XInputController::setDpad(XInputControl pad, boolean state) {
 	setButton(pad, state);
 }
 
-void XInputController::setDpad(boolean up, boolean down, boolean left, boolean right) {
+void XInputController::setDpad(boolean up, boolean down, boolean left, boolean right, boolean useSOCD) {
 	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
-	if (up && down) { down = false; }  // Up + Down = Up
-	if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+	if (useSOCD) {
+		if (up && down) { down = false; }  // Up + Down = Up
+		if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+	}
 
 	const boolean autoSendTemp = autoSendOption;  // Save autosend state
 	autoSendOption = false;  // Disable temporarily
@@ -257,7 +259,7 @@ void XInputController::setTrigger(XInputControl trigger, int32_t val) {
 	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
 	if (triggerData == nullptr) return;  // Not a trigger
 
-	val = rescaleInput(val, *getRangeFromEnum(trigger), triggerData->range);
+	val = rescaleInput(val, *getRangeFromEnum(trigger), XInputMap_Trigger::range);
 	if (getTrigger(trigger) == val) return;  // Trigger hasn't changed
 
 	tx[triggerData->index] = val;
@@ -269,8 +271,43 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
-	x = rescaleInput(x, *getRangeFromEnum(joy), joyData->range);
-	y = rescaleInput(y, *getRangeFromEnum(joy), joyData->range);
+	x = rescaleInput(x, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+	y = rescaleInput(y, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+
+	setJoystickDirect(joy, x, y);
+}
+
+void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return;  // Not a joystick
+
+	const Range & range = XInputMap_Joystick::range;
+
+	int16_t x = 0;
+	int16_t y = 0;
+
+	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
+	if (useSOCD) {
+		if (up && down) { down = false; }  // Up + Down = Up
+		if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+	}
+	
+	// Analog axis means directions are mutually exclusive. Only change the
+	// output from '0' if the per-axis inputs are different, in order to
+	// avoid the '-1' result from adding the int16 extremes
+	if (left != right) {
+		x = (right * range.max) - (left * range.min);
+	}
+	if (up != down) {
+		y = (up * range.max) - (down * range.min);
+	}
+
+	setJoystickDirect(joy, x, y);
+}
+
+void XInputController::setJoystickDirect(XInputControl joy, int16_t x, int16_t y) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return;  // Not a joystick
 
 	if (getJoystickX(joy) == x && getJoystickY(joy) == y) return;  // Joy hasn't changed
 

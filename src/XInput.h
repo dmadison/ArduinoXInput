@@ -86,11 +86,12 @@ public:
 	void setButton(uint8_t button, boolean state);
 
 	void setDpad(XInputControl pad, boolean state);
-	void setDpad(boolean up, boolean down, boolean left, boolean right);
+	void setDpad(boolean up, boolean down, boolean left, boolean right, boolean useSOCD = true);
 
 	void setTrigger(XInputControl trigger, int32_t val);
 
 	void setJoystick(XInputControl joy, int32_t x, int32_t y);
+	void setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD = true);
 
 	void releaseAll();
 
@@ -140,6 +141,8 @@ private:
 	uint8_t tx[20];  // USB transmit data
 	boolean newData;  // Flag for tx data changed
 	boolean autoSendOption;  // Flag for automatically sending data
+	
+	void setJoystickDirect(XInputControl joy, int16_t x, int16_t y);
 
 	void inline autosend() {
 		if (autoSendOption) { send(); }
