@@ -86,7 +86,7 @@ public:
 	void setButton(uint8_t button, boolean state);
 
 	void setDpad(XInputControl pad, boolean state);
-	void setDpad(boolean up, boolean down, boolean left, boolean right);
+	void setDpad(boolean up, boolean down, boolean left, boolean right, boolean useSOCD = true);
 
 	void setTrigger(XInputControl trigger, int32_t val);
 

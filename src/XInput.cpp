@@ -236,10 +236,12 @@ void XInputController::setDpad(XInputControl pad, boolean state) {
 	setButton(pad, state);
 }
 
-void XInputController::setDpad(boolean up, boolean down, boolean left, boolean right) {
+void XInputController::setDpad(boolean up, boolean down, boolean left, boolean right, boolean useSOCD) {
 	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
-	if (up && down) { down = false; }  // Up + Down = Up
-	if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+	if (useSOCD) {
+		if (up && down) { down = false; }  // Up + Down = Up
+		if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+	}
 
 	const boolean autoSendTemp = autoSendOption;  // Save autosend state
 	autoSendOption = false;  // Disable temporarily
