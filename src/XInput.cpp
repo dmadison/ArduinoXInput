@@ -277,7 +277,7 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	setJoystickDirect(joy, x, y);
 }
 
-void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right) {
+void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
@@ -287,7 +287,14 @@ void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, 
 	int16_t y = 0;
 
 	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
-	//  (Mutually exclusive. Avoids the '-1' result from adding the int16 extremes)
+	if (useSOCD) {
+		if (up && down) { down = false; }  // Up + Down = Up
+		if (left && right) { left = false; right = false; }  // Left + Right = Neutral
+	}
+	
+	// Analog axis means directions are mutually exclusive. Only change the
+	// output from '0' if the per-axis inputs are different, in order to
+	// avoid the '-1' result from adding the int16 extremes
 	if (left != right) {
 		x = (right * range.max) - (left * range.min);
 	}
