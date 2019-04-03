@@ -277,6 +277,27 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	setJoystickDirect(joy, x, y);
 }
 
+void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return;  // Not a joystick
+
+	const Range & range = XInputMap_Joystick::range;
+
+	int16_t x = 0;
+	int16_t y = 0;
+
+	// Simultaneous Opposite Cardinal Directions (SOCD) Cleaner
+	//  (Mutually exclusive. Avoids the '-1' result from adding the int16 extremes)
+	if (left != right) {
+		x = (right * range.max) - (left * range.min);
+	}
+	if (up != down) {
+		y = (up * range.max) - (down * range.min);
+	}
+
+	setJoystickDirect(joy, x, y);
+}
+
 void XInputController::setJoystickDirect(XInputControl joy, int16_t x, int16_t y) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
