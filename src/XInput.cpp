@@ -259,7 +259,7 @@ void XInputController::setTrigger(XInputControl trigger, int32_t val) {
 	const XInputMap_Trigger * triggerData = getTriggerFromEnum(trigger);
 	if (triggerData == nullptr) return;  // Not a trigger
 
-	val = rescaleInput(val, *getRangeFromEnum(trigger), triggerData->range);
+	val = rescaleInput(val, *getRangeFromEnum(trigger), XInputMap_Trigger::range);
 	if (getTrigger(trigger) == val) return;  // Trigger hasn't changed
 
 	tx[triggerData->index] = val;
@@ -271,8 +271,8 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
-	x = rescaleInput(x, *getRangeFromEnum(joy), joyData->range);
-	y = rescaleInput(y, *getRangeFromEnum(joy), joyData->range);
+	x = rescaleInput(x, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+	y = rescaleInput(y, *getRangeFromEnum(joy), XInputMap_Joystick::range);
 
 	setJoystickDirect(joy, x, y);
 }
