@@ -54,8 +54,8 @@ void setup() {
 		digitalWrite(LED_BUILTIN, LOW);
 	#endif
 
-	while (!XInputUSB::connected()) {}  // wait for connection
 	XInputUSB::setRecvCallback(receiveCallback);
+	while (!XInputUSB::connected()) {}  // wait for connection
 }
 
 void loop() {
