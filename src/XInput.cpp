@@ -296,10 +296,12 @@ void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, 
 	// output from '0' if the per-axis inputs are different, in order to
 	// avoid the '-1' result from adding the int16 extremes
 	if (left != right) {
-		x = (right * range.max) - (left * range.min);
+		if (left == true) { x = range.min; }
+		else if (right == true) { x = range.max; }
 	}
 	if (up != down) {
-		y = (up * range.max) - (down * range.min);
+		if (up == true) { y = range.max; }
+		else if (down == true) { y = range.min; }
 	}
 
 	setJoystickDirect(joy, x, y);
