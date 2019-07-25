@@ -277,6 +277,36 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	setJoystickDirect(joy, x, y);
 }
 
+void XInputController::setJoystickX(XInputControl joy, int32_t x) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return;  // Not a joystick
+
+	x = rescaleInput(x, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+
+	if (getJoystickX(joy) == x) return;  // Axis hasn't changed
+
+	tx[joyData->x_low] = lowByte(x);
+	tx[joyData->x_high] = highByte(x);
+
+	newData = true;
+	autosend();
+}
+
+void XInputController::setJoystickY(XInputControl joy, int32_t y) {
+	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
+	if (joyData == nullptr) return;  // Not a joystick
+
+	y = rescaleInput(y, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+
+	if (getJoystickY(joy) == y) return;  // Axis hasn't changed
+
+	tx[joyData->y_low] = lowByte(y);
+	tx[joyData->y_high] = highByte(y);
+
+	newData = true;
+	autosend();
+}
+
 void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
@@ -296,10 +326,12 @@ void XInputController::setJoystick(XInputControl joy, boolean up, boolean down, 
 	// output from '0' if the per-axis inputs are different, in order to
 	// avoid the '-1' result from adding the int16 extremes
 	if (left != right) {
-		x = (right * range.max) - (left * range.min);
+		if (left == true) { x = range.min; }
+		else if (right == true) { x = range.max; }
 	}
 	if (up != down) {
-		y = (up * range.max) - (down * range.min);
+		if (up == true) { y = range.max; }
+		else if (down == true) { y = range.min; }
 	}
 
 	setJoystickDirect(joy, x, y);

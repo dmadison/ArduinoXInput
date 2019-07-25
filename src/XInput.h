@@ -92,6 +92,8 @@ public:
 
 	void setJoystick(XInputControl joy, int32_t x, int32_t y);
 	void setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD = true);
+	void setJoystickX(XInputControl joy, int32_t x);
+	void setJoystickY(XInputControl joy, int32_t y);
 
 	void releaseAll();
 

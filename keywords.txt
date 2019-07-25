@@ -33,6 +33,8 @@ setButton	KEYWORD2
 setDpad	KEYWORD2
 setTrigger	KEYWORD2
 setJoystick	KEYWORD2
+setJoystickX	KEYWORD2
+setJoystickY	KEYWORD2
 
 releaseAll	KEYWORD2
 
