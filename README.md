@@ -52,6 +52,10 @@ The following boards packages are available:
 
 For a complete list of available packages and compatible boards see [the 'supported boards' file](extras/SupportedBoards.md). For information on how to add support for another Arduino-compatible board with native USB support, see [the documentation on the USB API](extras/XInputUSB_API.md).
 
+### Console Support
+
+Please be aware that none of the currently available board packages support connecting to the console itself. Genuine controllers use a dedicated hardware security chip that handshakes with the console. Arduinos do not have this chip, and its security method has not been (openly) broken.
+
 ## License
 
 This library is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file for more information.
