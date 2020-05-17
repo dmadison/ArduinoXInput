@@ -76,8 +76,9 @@ void loop() {
 		// XInput.setButton(BUTTON_R3, classic.buttonZR());  // but you can uncomment these to check that they work
 	}
 	else {  // Data is bad :(
-		XInput.releaseAll();
-		classic.reconnect();
+		XInput.releaseAll();  // clear set inputs
+		classic.connect();  // attempt to reconnect
+		delay(1000);
 	}
 
 	XInput.send();
