@@ -56,7 +56,7 @@ void setup() {
 
 void loop() {
 	if(classic.update()) {  // Get new data!
-		XInput.setJoystick(JOY_LEFT, classic.leftJoyX(), classic.leftJoyY());
+		XInput.setJoystick(JOY_LEFT,  classic.leftJoyX(), classic.leftJoyY());
 		XInput.setJoystick(JOY_RIGHT, classic.rightJoyX(), classic.rightJoyY());
 
 		XInput.setButton(BUTTON_A, classic.buttonB());
@@ -65,12 +65,12 @@ void loop() {
 		XInput.setButton(BUTTON_Y, classic.buttonX());
 
 		XInput.setButton(BUTTON_START, classic.buttonPlus());
-		XInput.setButton(BUTTON_BACK, classic.buttonMinus());
-		XInput.setButton(BUTTON_LOGO, classic.buttonHome());
+		XInput.setButton(BUTTON_BACK,  classic.buttonMinus());
+		XInput.setButton(BUTTON_LOGO,  classic.buttonHome());
 
 		XInput.setDpad(classic.dpadUp(), classic.dpadDown(), classic.dpadLeft(), classic.dpadRight());
 
-		XInput.setTrigger(TRIGGER_LEFT, classic.triggerL());
+		XInput.setTrigger(TRIGGER_LEFT,  classic.triggerL());
 		XInput.setTrigger(TRIGGER_RIGHT, classic.triggerR());
 
 		XInput.setButton(BUTTON_LB, classic.buttonZL());
