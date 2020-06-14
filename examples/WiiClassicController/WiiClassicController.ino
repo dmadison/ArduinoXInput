@@ -78,12 +78,15 @@ void loop() {
 
 		// XInput.setButton(BUTTON_L3, classic.buttonZL());  // The Classic Controller doesn't have L3 and R3
 		// XInput.setButton(BUTTON_R3, classic.buttonZR());  // but you can uncomment these to check that they work
+
+		XInput.send();
 	}
 	else {  // Data is bad :(
-		XInput.releaseAll();  // clear set inputs
-		classic.connect();  // attempt to reconnect
-		delay(1000);
-	}
+		XInput.releaseAll();  // clear set inputs...
+		XInput.send();  // ...and send that update
 
-	XInput.send();
+		while (!classic.connect()) {  // attempt to reconnect
+			delay(1000);
+		}
+	}
 }
