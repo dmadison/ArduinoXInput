@@ -33,13 +33,17 @@
 
 ClassicController classic;
 
+const int RangeOffset = 45;  // to make sure the values reach min/max outputs
+const int RangeMin =   0 + RangeOffset;
+const int RangeMax = 255 - RangeOffset;
+
 void setup() {
 	classic.begin();
 
-	XInput.setTriggerRange(4, 26);
+	XInput.setTriggerRange(RangeMin, RangeMax);  // set both left and right
 
-	XInput.setRange(JOY_LEFT, 8, 56);
-	XInput.setRange(JOY_RIGHT, 4, 28);
+	XInput.setRange(JOY_LEFT,  RangeMin, RangeMax);
+	XInput.setRange(JOY_RIGHT, RangeMin, RangeMax);
 
 	XInput.setAutoSend(false);  // Wait for all controls before sending
 
@@ -52,7 +56,7 @@ void setup() {
 
 void loop() {
 	if(classic.update()) {  // Get new data!
-		XInput.setJoystick(JOY_LEFT, classic.leftJoyX(), classic.leftJoyY());
+		XInput.setJoystick(JOY_LEFT,  classic.leftJoyX(), classic.leftJoyY());
 		XInput.setJoystick(JOY_RIGHT, classic.rightJoyX(), classic.rightJoyY());
 
 		XInput.setButton(BUTTON_A, classic.buttonB());
@@ -61,12 +65,12 @@ void loop() {
 		XInput.setButton(BUTTON_Y, classic.buttonX());
 
 		XInput.setButton(BUTTON_START, classic.buttonPlus());
-		XInput.setButton(BUTTON_BACK, classic.buttonMinus());
-		XInput.setButton(BUTTON_LOGO, classic.buttonHome());
+		XInput.setButton(BUTTON_BACK,  classic.buttonMinus());
+		XInput.setButton(BUTTON_LOGO,  classic.buttonHome());
 
 		XInput.setDpad(classic.dpadUp(), classic.dpadDown(), classic.dpadLeft(), classic.dpadRight());
 
-		XInput.setTrigger(TRIGGER_LEFT, classic.triggerL());
+		XInput.setTrigger(TRIGGER_LEFT,  classic.triggerL());
 		XInput.setTrigger(TRIGGER_RIGHT, classic.triggerR());
 
 		XInput.setButton(BUTTON_LB, classic.buttonZL());
@@ -74,12 +78,15 @@ void loop() {
 
 		// XInput.setButton(BUTTON_L3, classic.buttonZL());  // The Classic Controller doesn't have L3 and R3
 		// XInput.setButton(BUTTON_R3, classic.buttonZR());  // but you can uncomment these to check that they work
+
+		XInput.send();
 	}
 	else {  // Data is bad :(
-		XInput.releaseAll();  // clear set inputs
-		classic.connect();  // attempt to reconnect
-		delay(1000);
-	}
+		XInput.releaseAll();  // clear set inputs...
+		XInput.send();  // ...and send that update
 
-	XInput.send();
+		while (!classic.connect()) {  // attempt to reconnect
+			delay(1000);
+		}
+	}
 }

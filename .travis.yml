@@ -50,7 +50,7 @@ before_install:
     fi
 
   # Install Libraries
-  - arduino --install-library "Nintendo Extension Ctrl:0.7.2"
+  - arduino --install-library "Nintendo Extension Ctrl:0.8.1"
 
   # Sketch Compiling Functions
   - CYAN="\033[36m"; NOC="\033[0m";
