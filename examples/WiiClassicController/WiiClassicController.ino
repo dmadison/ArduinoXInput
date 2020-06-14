@@ -36,10 +36,10 @@ ClassicController classic;
 void setup() {
 	classic.begin();
 
-	XInput.setTriggerRange(4, 26);
+	XInput.setTriggerRange(0, 255);
 
-	XInput.setRange(JOY_LEFT, 8, 56);
-	XInput.setRange(JOY_RIGHT, 4, 28);
+	XInput.setRange(JOY_LEFT, 0, 255);
+	XInput.setRange(JOY_RIGHT, 0, 255);
 
 	XInput.setAutoSend(false);  // Wait for all controls before sending
 
