@@ -33,13 +33,17 @@
 
 ClassicController classic;
 
+const int RangeOffset = 45;  // to make sure the values reach min/max outputs
+const int RangeMin =   0 + RangeOffset;
+const int RangeMax = 255 - RangeOffset;
+
 void setup() {
 	classic.begin();
 
-	XInput.setTriggerRange(0, 255);
+	XInput.setTriggerRange(RangeMin, RangeMax);  // set both left and right
 
-	XInput.setRange(JOY_LEFT, 0, 255);
-	XInput.setRange(JOY_RIGHT, 0, 255);
+	XInput.setRange(JOY_LEFT,  RangeMin, RangeMax);
+	XInput.setRange(JOY_RIGHT, RangeMin, RangeMax);
 
 	XInput.setAutoSend(false);  // Wait for all controls before sending
 
