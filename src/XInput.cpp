@@ -559,6 +559,15 @@ void XInputController::reset() {
 	autoSendOption = true;
 }
 
+static void fillBuffer(char* buff, const char fill) {
+	uint8_t i = 0;
+	while (true) {
+		if (buff[i] == 0) break;
+		buff[i] = fill;
+		i++;
+	}
+}
+
 void XInputController::printDebug(Print &output) const {
 	const char fillCharacter = '_';
 
@@ -584,14 +593,8 @@ void XInputController::printDebug(Print &output) const {
 	char leftBumper[3]  = "LB";
 	char rightBumper[3] = "RB";
 
-	if (!getButton(BUTTON_LB)) {
-		leftBumper[0] = fillCharacter;
-		leftBumper[1] = fillCharacter;
-	}
-	if (!getButton(BUTTON_RB)) {
-		rightBumper[0] = fillCharacter;
-		rightBumper[1] = fillCharacter;
-	}
+	if (!getButton(BUTTON_LB)) fillBuffer(leftBumper,  fillCharacter);
+	if (!getButton(BUTTON_RB)) fillBuffer(rightBumper, fillCharacter);
 
 	output.print("XInput Debug: ");
 	sprintf(buffer,
