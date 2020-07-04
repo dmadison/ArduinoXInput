@@ -559,12 +559,39 @@ void XInputController::reset() {
 	autoSendOption = true;
 }
 
+static void fillBuffer(char* buff, const char fill) {
+	uint8_t i = 0;
+	while (true) {
+		if (buff[i] == 0) break;
+		buff[i] = fill;
+		i++;
+	}
+}
+
 void XInputController::printDebug(Print &output) const {
 	const char fillCharacter = '_';
+	char buffer[34];
 
-	char buffer[80];
+	output.print("XInput Debug: ");
 
-	// Buttons
+	// Left Side Controls
+	char leftBumper[3] = "LB";
+	char leftJoyBtn[3] = "L3";
+
+	if (!getButton(BUTTON_LB)) fillBuffer(leftBumper, fillCharacter);
+	if (!getButton(BUTTON_L3)) fillBuffer(leftJoyBtn, fillCharacter);
+
+	sprintf(buffer,
+		"LT: %3u %s L:(%6d, %6d, %s)",
+
+		getTrigger(TRIGGER_LEFT),
+		leftBumper,
+		getJoystickX(JOY_LEFT), getJoystickY(JOY_LEFT),
+		leftJoyBtn
+	);
+	output.print(buffer);
+
+	// Face Buttons
 	const char dpadLPrint = getButton(DPAD_LEFT)  ? '<' : fillCharacter;
 	const char dpadUPrint = getButton(DPAD_UP)    ? '^' : fillCharacter;
 	const char dpadDPrint = getButton(DPAD_DOWN)  ? 'v' : fillCharacter;
@@ -580,35 +607,27 @@ void XInputController::printDebug(Print &output) const {
 
 	const char logoPrint = getButton(BUTTON_LOGO) ? 'X' : fillCharacter;
 
-	// Bumpers
-	char leftBumper[3]  = "LB";
-	char rightBumper[3] = "RB";
-
-	if (!getButton(BUTTON_LB)) {
-		leftBumper[0] = fillCharacter;
-		leftBumper[1] = fillCharacter;
-	}
-	if (!getButton(BUTTON_RB)) {
-		rightBumper[0] = fillCharacter;
-		rightBumper[1] = fillCharacter;
-	}
-
-	output.print("XInput Debug: ");
 	sprintf(buffer,
-		"LT: %3u %s L:(%6d, %6d) %c%c%c%c | %c%c%c | %c%c%c%c R:(%6d, %6d) %s RT: %3u",
-		
-		// Left side controls
-		getTrigger(TRIGGER_LEFT),
-		leftBumper,
-		getJoystickX(JOY_LEFT), getJoystickY(JOY_LEFT),
+		" %c%c%c%c | %c%c%c | %c%c%c%c ",
 
-		// Buttons
 		dpadLPrint, dpadUPrint, dpadDPrint, dpadRPrint,
 		backPrint, logoPrint, startPrint,
-		aButtonPrint, bButtonPrint, xButtonPrint, yButtonPrint,
+		aButtonPrint, bButtonPrint, xButtonPrint, yButtonPrint
+	);
+	output.print(buffer);
 
-		// Right side controls
+	// Right Side Controls
+	char rightBumper[3] = "RB";
+	char rightJoyBtn[3] = "R3";
+
+	if (!getButton(BUTTON_RB)) fillBuffer(rightBumper, fillCharacter);
+	if (!getButton(BUTTON_R3)) fillBuffer(rightJoyBtn, fillCharacter);
+
+	sprintf(buffer,
+		"R:(%6d, %6d, %s) %s RT: %3u",
+		
 		getJoystickX(JOY_RIGHT), getJoystickY(JOY_RIGHT),
+		rightJoyBtn,
 		rightBumper,
 		getTrigger(TRIGGER_RIGHT)
 	);
