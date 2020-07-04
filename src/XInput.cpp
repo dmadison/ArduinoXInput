@@ -571,9 +571,9 @@ static void fillBuffer(char* buff, const char fill) {
 void XInputController::printDebug(Print &output) const {
 	const char fillCharacter = '_';
 
-	char buffer[80];
+	char buffer[88];
 
-	// Buttons
+	// Face Buttons
 	const char dpadLPrint = getButton(DPAD_LEFT)  ? '<' : fillCharacter;
 	const char dpadUPrint = getButton(DPAD_UP)    ? '^' : fillCharacter;
 	const char dpadDPrint = getButton(DPAD_DOWN)  ? 'v' : fillCharacter;
@@ -596,14 +596,22 @@ void XInputController::printDebug(Print &output) const {
 	if (!getButton(BUTTON_LB)) fillBuffer(leftBumper,  fillCharacter);
 	if (!getButton(BUTTON_RB)) fillBuffer(rightBumper, fillCharacter);
 
+	// Joystick Buttons
+	char leftJoyBtn[3]  = "L3";
+	char rightJoyBtn[3] = "R3";
+
+	if (!getButton(BUTTON_L3)) fillBuffer(leftJoyBtn,  fillCharacter);
+	if (!getButton(BUTTON_R3)) fillBuffer(rightJoyBtn, fillCharacter);
+
 	output.print("XInput Debug: ");
 	sprintf(buffer,
-		"LT: %3u %s L:(%6d, %6d) %c%c%c%c | %c%c%c | %c%c%c%c R:(%6d, %6d) %s RT: %3u",
+		"LT: %3u %s L:(%6d, %6d, %s) %c%c%c%c | %c%c%c | %c%c%c%c R:(%6d, %6d, %s) %s RT: %3u",
 		
 		// Left side controls
 		getTrigger(TRIGGER_LEFT),
 		leftBumper,
 		getJoystickX(JOY_LEFT), getJoystickY(JOY_LEFT),
+		leftJoyBtn,
 
 		// Buttons
 		dpadLPrint, dpadUPrint, dpadDPrint, dpadRPrint,
@@ -612,6 +620,7 @@ void XInputController::printDebug(Print &output) const {
 
 		// Right side controls
 		getJoystickX(JOY_RIGHT), getJoystickY(JOY_RIGHT),
+		rightJoyBtn,
 		rightBumper,
 		getTrigger(TRIGGER_RIGHT)
 	);
