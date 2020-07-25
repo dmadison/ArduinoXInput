@@ -31,7 +31,7 @@
 
 enum XInputControl : uint8_t {
 	BUTTON_LOGO = 0,
-	BUTTON_A  = 1,
+	BUTTON_A = 1,
 	BUTTON_B = 2,
 	BUTTON_X = 3,
 	BUTTON_Y = 4,
@@ -41,22 +41,22 @@ enum XInputControl : uint8_t {
 	BUTTON_START = 8,
 	BUTTON_L3 = 9,
 	BUTTON_R3 = 10,
-	DPAD_UP,
-	DPAD_DOWN,
-	DPAD_LEFT,
-	DPAD_RIGHT,
-	TRIGGER_LEFT,
-	TRIGGER_RIGHT,
+	DPAD_UP = 11,
+	DPAD_DOWN = 12,
+	DPAD_LEFT = 13,
+	DPAD_RIGHT = 14,
+	TRIGGER_LEFT = 15,
+	TRIGGER_RIGHT = 16,
 	JOY_LEFT,
 	JOY_RIGHT,
 };
 
-enum class XInputReceiveType {
+enum class XInputReceiveType : uint8_t {
 	Rumble = 0x00,
 	LEDs = 0x01,
 };
 
-enum class XInputLEDPattern {
+enum class XInputLEDPattern : uint8_t {
 	Off = 0x00,
 	Blinking = 0x01,
 	Flash1 = 0x02,
