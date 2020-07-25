@@ -51,12 +51,12 @@ enum XInputControl : uint8_t {
 	JOY_RIGHT,
 };
 
-enum class XInputReceiveType {
+enum class XInputReceiveType : uint8_t {
 	Rumble = 0x00,
 	LEDs = 0x01,
 };
 
-enum class XInputLEDPattern {
+enum class XInputLEDPattern : uint8_t {
 	Off = 0x00,
 	Blinking = 0x01,
 	Flash1 = 0x02,
