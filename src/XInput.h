@@ -91,8 +91,8 @@ public:
 	void setTrigger(XInputControl trigger, int32_t val);
 
 	void setJoystick(XInputControl joy, int32_t x, int32_t y);
-	void setJoystickX(XInputControl joy, int32_t x);
-	void setJoystickY(XInputControl joy, int32_t y);
+	void setJoystickX(XInputControl joy, int32_t x, boolean invert=false);
+	void setJoystickY(XInputControl joy, int32_t y, boolean invert=false);
 	void setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD=true);
 
 	void releaseAll();
@@ -162,6 +162,7 @@ private:
 	Range rangeTrigLeft, rangeTrigRight, rangeJoyLeft, rangeJoyRight;
 	Range * getRangeFromEnum(XInputControl ctrl);
 	static int32_t rescaleInput(int32_t val, const Range& in, const Range &out);
+	static int16_t invertInput(int16_t val, const Range& range);
 };
 
 extern XInputController XInput;

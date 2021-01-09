@@ -277,11 +277,12 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	setJoystickDirect(joy, x, y);
 }
 
-void XInputController::setJoystickX(XInputControl joy, int32_t x) {
+void XInputController::setJoystickX(XInputControl joy, int32_t x, boolean invert) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
 	x = rescaleInput(x, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+	if (invert) x = invertInput(x, XInputMap_Joystick::range);
 
 	if (getJoystickX(joy) == x) return;  // Axis hasn't changed
 
@@ -292,11 +293,12 @@ void XInputController::setJoystickX(XInputControl joy, int32_t x) {
 	autosend();
 }
 
-void XInputController::setJoystickY(XInputControl joy, int32_t y) {
+void XInputController::setJoystickY(XInputControl joy, int32_t y, boolean invert) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
 	y = rescaleInput(y, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+	if (invert) y = invertInput(y, XInputMap_Joystick::range);
 
 	if (getJoystickY(joy) == y) return;  // Axis hasn't changed
 
@@ -519,6 +521,10 @@ int32_t XInputController::rescaleInput(int32_t val, const Range& in, const Range
 	if (val >= in.max) return out.max;  // Out of range +
 	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	return map(val, in.min, in.max, out.min, out.max);
+}
+
+int16_t XInputController::invertInput(int16_t val, const Range& range) {
+	return range.max - val + range.min;
 }
 
 void XInputController::setTriggerRange(int32_t rangeMin, int32_t rangeMax) {
