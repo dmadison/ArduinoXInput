@@ -341,15 +341,18 @@ void XInputController::setJoystickDirect(XInputControl joy, int16_t x, int16_t y
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
-	if (getJoystickX(joy) == x && getJoystickY(joy) == y) return;  // Joy hasn't changed
+	if (getJoystickX(joy) != x) {
+		tx[joyData->x_low] = lowByte(x);
+		tx[joyData->x_high] = highByte(x);
+		newData = true;
+	}
 
-	tx[joyData->x_low]  = lowByte(x);
-	tx[joyData->x_high] = highByte(x);
+	if (getJoystickY(joy) != y) {
+		tx[joyData->y_low] = lowByte(y);
+		tx[joyData->y_high] = highByte(y);
+		newData = true;
+	}
 
-	tx[joyData->y_low]  = lowByte(y);
-	tx[joyData->y_high] = highByte(y);
-
-	newData = true;
 	autosend();
 }
 
