@@ -86,14 +86,14 @@ public:
 	void setButton(uint8_t button, boolean state);
 
 	void setDpad(XInputControl pad, boolean state);
-	void setDpad(boolean up, boolean down, boolean left, boolean right, boolean useSOCD = true);
+	void setDpad(boolean up, boolean down, boolean left, boolean right, boolean useSOCD=true);
 
 	void setTrigger(XInputControl trigger, int32_t val);
 
 	void setJoystick(XInputControl joy, int32_t x, int32_t y);
-	void setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD = true);
 	void setJoystickX(XInputControl joy, int32_t x);
 	void setJoystickY(XInputControl joy, int32_t y);
+	void setJoystick(XInputControl joy, boolean up, boolean down, boolean left, boolean right, boolean useSOCD=true);
 
 	void releaseAll();
 
@@ -136,7 +136,7 @@ public:
 	void reset();
 
 	// Debug
-	void printDebug(Print& output = Serial) const;
+	void printDebug(Print& output=Serial) const;
 
 private:
 	// Sent Data
