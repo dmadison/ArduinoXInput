@@ -514,7 +514,7 @@ XInputController::Range * XInputController::getRangeFromEnum(XInputControl ctrl)
 	}
 }
 
-int32_t XInputController::rescaleInput(int32_t val, Range in, Range out) {
+int32_t XInputController::rescaleInput(int32_t val, const Range& in, const Range& out) {
 	if (val <= in.min) return out.min;  // Out of range -
 	if (val >= in.max) return out.max;  // Out of range +
 	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical

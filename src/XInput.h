@@ -161,7 +161,7 @@ private:
 	// Control Input Ranges
 	Range rangeTrigLeft, rangeTrigRight, rangeJoyLeft, rangeJoyRight;
 	Range * getRangeFromEnum(XInputControl ctrl);
-	int32_t rescaleInput(int32_t val, Range in, Range out);
+	static int32_t rescaleInput(int32_t val, const Range& in, const Range &out);
 };
 
 extern XInputController XInput;
