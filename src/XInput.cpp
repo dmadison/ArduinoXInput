@@ -370,9 +370,15 @@ void XInputController::setAutoSend(boolean a) {
 }
 
 boolean XInputController::getButton(uint8_t button) const {
-	const XInputMap_Button * buttonData = getButtonFromEnum((XInputControl) button);
-	if (buttonData == nullptr) return 0;  // Not a button
-	return tx[buttonData->index] & buttonData->mask;
+	const XInputMap_Button* buttonData = getButtonFromEnum((XInputControl) button);
+	if (buttonData != nullptr) {
+		return tx[buttonData->index] & buttonData->mask;
+	}
+	const XInputMap_Trigger* triggerData = getTriggerFromEnum((XInputControl) button);
+	if (triggerData != nullptr) {
+		return getTrigger((XInputControl) button) != 0 ? 1 : 0;
+	}
+	return 0;  // Not a button or a trigger
 }
 
 boolean XInputController::getDpad(XInputControl dpad) const {
