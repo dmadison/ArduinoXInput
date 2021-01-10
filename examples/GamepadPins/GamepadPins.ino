@@ -28,6 +28,8 @@
  *                and all of the main buttons.
  *
  *                * Joysticks should be your typical 10k dual potentiometers.
+ *                  To prevent random values caused by floating inputs,
+                    joysticks are disabled by default.
  *                * Triggers can be either analog (pots) or digital (buttons).
  *                  Set the 'TriggerButtons' variable to change between the two.
  *                * Buttons use the internal pull-ups and should be connected
@@ -187,12 +189,11 @@ void loop() {
 
 		// White lie here... most generic joysticks are typically
 		// inverted by default. If the "Invert" variable is false
-		// then we need to do this transformation.
-		if (InvertLeftYAxis == false) {
-			leftJoyY = ADC_Max - leftJoyY;
-		}
+		// then we'll take the opposite value with 'not' (!).
+		boolean invert = !InvertLeftYAxis;
 
-		XInput.setJoystick(JOY_LEFT, leftJoyX, leftJoyY);
+		XInput.setJoystickX(JOY_LEFT, leftJoyX);
+		XInput.setJoystickY(JOY_LEFT, leftJoyY, invert);
 	}
 
 	// Set right joystick
@@ -200,11 +201,10 @@ void loop() {
 		int rightJoyX = analogRead(Pin_RightJoyX);
 		int rightJoyY = analogRead(Pin_RightJoyY);
 
-		if (InvertRightYAxis == false) {
-			rightJoyY = ADC_Max - rightJoyY;
-		}
+		boolean invert = !InvertRightYAxis;
 
-		XInput.setJoystick(JOY_RIGHT, rightJoyX, rightJoyY);
+		XInput.setJoystickX(JOY_RIGHT, rightJoyX);
+		XInput.setJoystickY(JOY_RIGHT, rightJoyY, invert);
 	}
 
 	// Send control data to the computer

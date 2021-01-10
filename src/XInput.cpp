@@ -277,11 +277,12 @@ void XInputController::setJoystick(XInputControl joy, int32_t x, int32_t y) {
 	setJoystickDirect(joy, x, y);
 }
 
-void XInputController::setJoystickX(XInputControl joy, int32_t x) {
+void XInputController::setJoystickX(XInputControl joy, int32_t x, boolean invert) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
 	x = rescaleInput(x, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+	if (invert) x = invertInput(x, XInputMap_Joystick::range);
 
 	if (getJoystickX(joy) == x) return;  // Axis hasn't changed
 
@@ -292,11 +293,12 @@ void XInputController::setJoystickX(XInputControl joy, int32_t x) {
 	autosend();
 }
 
-void XInputController::setJoystickY(XInputControl joy, int32_t y) {
+void XInputController::setJoystickY(XInputControl joy, int32_t y, boolean invert) {
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
 	y = rescaleInput(y, *getRangeFromEnum(joy), XInputMap_Joystick::range);
+	if (invert) y = invertInput(y, XInputMap_Joystick::range);
 
 	if (getJoystickY(joy) == y) return;  // Axis hasn't changed
 
@@ -341,15 +343,18 @@ void XInputController::setJoystickDirect(XInputControl joy, int16_t x, int16_t y
 	const XInputMap_Joystick * joyData = getJoyFromEnum(joy);
 	if (joyData == nullptr) return;  // Not a joystick
 
-	if (getJoystickX(joy) == x && getJoystickY(joy) == y) return;  // Joy hasn't changed
+	if (getJoystickX(joy) != x) {
+		tx[joyData->x_low] = lowByte(x);
+		tx[joyData->x_high] = highByte(x);
+		newData = true;
+	}
 
-	tx[joyData->x_low]  = lowByte(x);
-	tx[joyData->x_high] = highByte(x);
+	if (getJoystickY(joy) != y) {
+		tx[joyData->y_low] = lowByte(y);
+		tx[joyData->y_high] = highByte(y);
+		newData = true;
+	}
 
-	tx[joyData->y_low]  = lowByte(y);
-	tx[joyData->y_high] = highByte(y);
-
-	newData = true;
 	autosend();
 }
 
@@ -365,9 +370,15 @@ void XInputController::setAutoSend(boolean a) {
 }
 
 boolean XInputController::getButton(uint8_t button) const {
-	const XInputMap_Button * buttonData = getButtonFromEnum((XInputControl) button);
-	if (buttonData == nullptr) return 0;  // Not a button
-	return tx[buttonData->index] & buttonData->mask;
+	const XInputMap_Button* buttonData = getButtonFromEnum((XInputControl) button);
+	if (buttonData != nullptr) {
+		return tx[buttonData->index] & buttonData->mask;
+	}
+	const XInputMap_Trigger* triggerData = getTriggerFromEnum((XInputControl) button);
+	if (triggerData != nullptr) {
+		return getTrigger((XInputControl) button) != 0 ? 1 : 0;
+	}
+	return 0;  // Not a button or a trigger
 }
 
 boolean XInputController::getDpad(XInputControl dpad) const {
@@ -427,8 +438,8 @@ boolean XInputController::connected() {
 //Send an update packet to the PC
 int XInputController::send() {
 	if (!newData) return 0;  // TX data hasn't changed
-#ifdef USB_XINPUT
 	newData = false;
+#ifdef USB_XINPUT
 	return XInputUSB::send(tx, sizeof(tx));
 #else
 	printDebug();
@@ -511,11 +522,15 @@ XInputController::Range * XInputController::getRangeFromEnum(XInputControl ctrl)
 	}
 }
 
-int32_t XInputController::rescaleInput(int32_t val, Range in, Range out) {
+int32_t XInputController::rescaleInput(int32_t val, const Range& in, const Range& out) {
 	if (val <= in.min) return out.min;  // Out of range -
 	if (val >= in.max) return out.max;  // Out of range +
 	if (in.min == out.min && in.max == out.max) return val;  // Ranges identical
 	return map(val, in.min, in.max, out.min, out.max);
+}
+
+int16_t XInputController::invertInput(int16_t val, const Range& range) {
+	return range.max - val + range.min;
 }
 
 void XInputController::setTriggerRange(int32_t rangeMin, int32_t rangeMax) {
