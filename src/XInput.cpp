@@ -438,8 +438,8 @@ boolean XInputController::connected() {
 //Send an update packet to the PC
 int XInputController::send() {
 	if (!newData) return 0;  // TX data hasn't changed
-#ifdef USB_XINPUT
 	newData = false;
+#ifdef USB_XINPUT
 	return XInputUSB::send(tx, sizeof(tx));
 #else
 	printDebug();
