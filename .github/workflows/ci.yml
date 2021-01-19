@@ -1,0 +1,86 @@
+name: build
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  IDE_VERSION: 1.8.13
+  TEENSY_VERSION: 153
+  IDE_LOCATION: /usr/local/share/arduino
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        board: ['Arduino Leonardo (Serial)', 'Arduino Leonardo (XInput)', 'Teensy LC']
+        include:
+          - board: 'Arduino Leonardo (Serial)'
+            fqbn: arduino:avr:leonardo
+          - board: 'Arduino Leonardo (XInput)'
+            fqbn: xinput:avr:leonardo
+          - board: 'Teensy LC'
+            fqbn: teensy:avr:teensyLC:usb=xinput,speed=48,opt=osstd,keys=en-us
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Arduino IDE
+        run: |
+          wget http://downloads.arduino.cc/arduino-$IDE_VERSION-linux64.tar.xz
+          tar xf arduino-$IDE_VERSION-linux64.tar.xz
+          sudo mv arduino-$IDE_VERSION /usr/local/share/arduino
+          sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
+          rm arduino-$IDE_VERSION-linux64.tar.xz
+
+      - name: Link XInput Library
+        run: ln --symbolic "$PWD" $IDE_LOCATION/libraries/
+
+      - name: Install Teensyduino
+        if: contains(matrix.board, 'Teensy')
+        run: |
+          wget https://www.pjrc.com/teensy/td_$TEENSY_VERSION/TeensyduinoInstall.linux64;
+          chmod +x ./TeensyduinoInstall.linux64;
+          sudo ./TeensyduinoInstall.linux64 --dir=/usr/local/share/arduino;
+          rm ./TeensyduinoInstall.linux64;
+
+      - name: Install Boards - XInput AVR
+        if: contains(matrix.fqbn, 'xinput:avr')
+        run: |
+          git clone https://github.com/dmadison/ArduinoXInput_AVR.git;
+          mkdir -p $IDE_LOCATION/hardware/xinput/avr;
+          mv ArduinoXInput_AVR/* $IDE_LOCATION/hardware/xinput/avr;
+          rm -rf ArduinoXInput_AVR;
+
+      - name: Install Boards - XInput Teensy
+        if: contains(matrix.board, 'Teensy')
+        run: |
+          git clone https://github.com/dmadison/ArduinoXInput_Teensy.git;
+          sudo \cp -r ArduinoXInput_Teensy/teensy $IDE_LOCATION/hardware;
+          rm -rf ArduinoXInput_Teensy;
+          sudo python ./.github/workflows/remove_teensyloader.py $IDE_LOCATION/hardware/teensy/avr/platform.txt
+
+      - name: Install Libraries for Examples
+        run: arduino --install-library "Nintendo Extension Ctrl:0.8.1"
+
+      - name: Build Examples
+        run: |
+          buildSketchPath() {
+            sktch=${1##*/examples/};
+            sktch=${sktch%/*.ino};
+            echo -e "\nBuilding sketch $sktch.ino";
+            arduino --verify --board ${{ matrix.fqbn }} "$1";
+          }
+          buildExampleSketch() {
+            buildSketchPath "$PWD/examples/$1/$1.ino";
+          }
+          buildExamples() {
+            IFS=$'\n'; set -f;
+            for f in $(find $PWD/examples/ -name '*.ino');
+            do
+              buildSketchPath $f;
+            done;
+            unset IFS; set +f;
+          }
+          buildExamples
