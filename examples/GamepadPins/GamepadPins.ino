@@ -209,4 +209,7 @@ void loop() {
 
 	// Send control data to the computer
 	XInput.send();
+	
+	// a brief delay, so this runs "only" 200 times per second
+	delay(5);
 }
