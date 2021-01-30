@@ -79,11 +79,13 @@ const int Pin_ButtonStart = 7;
 const int Pin_ButtonL3 = 8;
 const int Pin_ButtonR3 = 9;
 
+const int Pin_ButtonLogo = 10;
+
 // Directional Pad Pins
-const int Pin_DpadUp    = 10;
-const int Pin_DpadDown  = 11;
-const int Pin_DpadLeft  = 12;
-const int Pin_DpadRight = 13;
+const int Pin_DpadUp    = 11;
+const int Pin_DpadDown  = 12;
+const int Pin_DpadLeft  = 13;
+const int Pin_DpadRight = 14;
 
 void setup() {
 	// If using buttons for the triggers, use internal pull-up resistors
@@ -110,6 +112,8 @@ void setup() {
 
 	pinMode(Pin_ButtonL3, INPUT_PULLUP);
 	pinMode(Pin_ButtonR3, INPUT_PULLUP);
+
+	pinMode(Pin_ButtonLogo, INPUT_PULLUP);
 
 	pinMode(Pin_DpadUp, INPUT_PULLUP);
 	pinMode(Pin_DpadDown, INPUT_PULLUP);
@@ -139,6 +143,8 @@ void loop() {
 	boolean buttonL3 = !digitalRead(Pin_ButtonL3);
 	boolean buttonR3 = !digitalRead(Pin_ButtonR3);
 
+	boolean buttonLogo = !digitalRead(Pin_ButtonLogo);
+
 	boolean dpadUp    = !digitalRead(Pin_DpadUp);
 	boolean dpadDown  = !digitalRead(Pin_DpadDown);
 	boolean dpadLeft  = !digitalRead(Pin_DpadLeft);
@@ -158,6 +164,8 @@ void loop() {
 
 	XInput.setButton(BUTTON_L3, buttonL3);
 	XInput.setButton(BUTTON_R3, buttonR3);
+
+	XInput.setButton(BUTTON_LOGO, buttonLogo);
 
 	// Set XInput DPAD values
 	XInput.setDpad(dpadUp, dpadDown, dpadLeft, dpadRight);
