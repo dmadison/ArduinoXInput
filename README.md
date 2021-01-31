@@ -21,7 +21,7 @@ void loop() {
 
 Before the library will work, you must install a compatible boards file that contains the XInput USB descriptors, otherwise the microcontroller won't behave like an XInput device. **This is not optional**. See the [compatible boards](#compatible-boards) section below for more information.
 
-After installing a compatible boards package, you must then [download and install the library](https://www.arduino.cc/en/guide/libraries). Once the XInput library is installed, open up the Arduino IDE and load an example sketch, located in `File -> Examples -> XInput` (I suggest trying the 'Blink' sketch first). Double-check that you have the correct XInput board selected in the 'Tools' menu, then upload the sketch to your microcontroller.
+After installing a compatible boards package, you must then [download and install the library](https://www.arduino.cc/en/guide/libraries). Once the XInput library is installed, open up the Arduino IDE and load an example sketch, located in `File -> Examples -> XInput` (I suggest trying the 'Blink' sketch first). Double-check that you have the correct XInput board and/or XInput USB type selected in the 'Tools' menu, then upload the sketch to your microcontroller.
 
 On Windows, you can test that the sketch is working properly by opening up the joystick control panel ([joy.cpl](https://support.microsoft.com/en-us/help/831361/how-to-troubleshoot-game-controllers-in-microsoft-games)) or by using [HTML5 Gamepad Tester](https://html5gamepad.com/). If you uploaded the XInput 'Blink' example, the #1 button ('A') should be slowly turning on and off.
 
