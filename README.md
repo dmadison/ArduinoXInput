@@ -33,6 +33,8 @@ The library gives you access to the following controls available on the Xbox 360
 * 2 Analog Triggers (8 bit)
 * 1 Four-Way Directional Pad (D-Pad)
 
+For the full list of control names as used in the library, [see the source files](src/XInput.h).
+
 The library also processes received data, so you can read the status of the controller's 2 rumble motors (8-bit), the assigned player number (1-4), and the index of the current LED animation. Data is sent and received automatically over USB.
 
 ## Compatible Boards
