@@ -200,6 +200,7 @@ XInputController::XInputController() :
 	reset();
 #ifdef USB_XINPUT
 	XInputUSB::setRecvCallback(XInputLib_Receive_Callback);
+	while(this->receive());  // flush USB OUT buffer
 #endif
 }
 
