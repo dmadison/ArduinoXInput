@@ -3,8 +3,8 @@ name: build
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  IDE_VERSION: 1.8.13
-  TEENSY_VERSION: 153
+  IDE_VERSION: 1.8.16
+  TEENSY_VERSION: 155
   IDE_LOCATION: /usr/local/share/arduino
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
           sudo python ./.github/workflows/remove_teensyloader.py $IDE_LOCATION/hardware/teensy/avr/platform.txt
 
       - name: Install Libraries for Examples
-        run: arduino --install-library "Nintendo Extension Ctrl:0.8.1"
+        run: arduino --install-library "Nintendo Extension Ctrl:0.8.3"
 
       - name: Build Examples
         run: |
