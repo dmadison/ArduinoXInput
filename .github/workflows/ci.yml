@@ -3,8 +3,8 @@ name: build
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  IDE_VERSION: 1.8.16
-  TEENSY_VERSION: 155
+  IDE_VERSION: 1.8.19
+  TEENSY_VERSION: 156
   IDE_LOCATION: /usr/local/share/arduino
 
 jobs:
