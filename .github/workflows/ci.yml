@@ -13,18 +13,20 @@ jobs:
 
     strategy:
       matrix:
-        board: ['Arduino Leonardo (Serial)', 'Arduino Leonardo (XInput)', 'Teensy LC']
+        board: ['Arduino Leonardo (Serial)', 'Arduino Leonardo (XInput)', 'Teensy 3.2', 'Teensy 4.0']
         include:
           - board: 'Arduino Leonardo (Serial)'
             fqbn: arduino:avr:leonardo
           - board: 'Arduino Leonardo (XInput)'
             fqbn: xinput:avr:leonardo
-          - board: 'Teensy LC'
-            fqbn: teensy:avr:teensyLC:usb=xinput,speed=48,opt=osstd,keys=en-us
+          - board: 'Teensy 3.2'
+            fqbn: teensy:avr:teensy31:usb=xinput,speed=72,opt=o2std,keys=en-us
+          - board: 'Teensy 4.0'
+            fqbn: teensy:avr:teensy40:usb=xinput,speed=600,opt=o2std,keys=en-us
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Arduino IDE
         run: |
