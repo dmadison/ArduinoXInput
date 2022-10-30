@@ -13,14 +13,14 @@ jobs:
 
     strategy:
       matrix:
-        board: ['Arduino Leonardo (Serial)', 'Arduino Leonardo (XInput)', 'Teensy LC']
+        board: ['Arduino Leonardo (Serial)', 'Arduino Leonardo (XInput)', 'Teensy 3.2']
         include:
           - board: 'Arduino Leonardo (Serial)'
             fqbn: arduino:avr:leonardo
           - board: 'Arduino Leonardo (XInput)'
             fqbn: xinput:avr:leonardo
-          - board: 'Teensy LC'
-            fqbn: teensy:avr:teensyLC:usb=xinput,speed=48,opt=osstd,keys=en-us
+          - board: 'Teensy 3.2'
+            fqbn: teensy:avr:teensy31:usb=xinput,speed=72,opt=o2std,keys=en-us
 
     steps:
       - name: Checkout
