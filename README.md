@@ -49,8 +49,8 @@ The following boards packages are available:
 * #### [SparkFun AVR Boards](https://www.github.com/dmadison/ArduinoXInput_SparkFun)
   Provides support for the MaKey MaKey, Pro Micro, Fio, Qduino Mini, and LilyPad USB Plus. Requires the XInput AVR Core boards.
 
-* #### [Teensy 3 Boards](https://www.github.com/dmadison/ArduinoXInput_Teensy)
-  Includes an 'XInput' USB mode for the Teensy 3.1, 3.2, 3.5, 3.6, and LC microcontrollers. Requires a preexisting Teensyduino installation.
+* #### [Teensy Boards](https://www.github.com/dmadison/ArduinoXInput_Teensy)
+  Includes an 'XInput' USB mode for the Teensy 3.1, 3.2, 3.5, 3.6, LC, 4.0, 4.1, and MicroMod. Requires a preexisting Teensyduino installation.
 
 For a complete list of available packages and compatible boards see [the 'supported boards' file](extras/SupportedBoards.md). For information on how to add support for another Arduino-compatible board with native USB support, see [the documentation on the USB API](extras/XInputUSB_API.md).
 
