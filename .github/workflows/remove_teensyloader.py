@@ -12,7 +12,7 @@ with open(filepath, 'r') as f:
 
 with open(filepath, 'w') as f:
 	# matching "postbuild" hooks of any number which call the "teensy_post_compile" application
-	pattern = re.compile("recipe\.hooks\.postbuild\.[0-9]\.pattern=\"{compiler\.path}teensy_post_compile\"")
+	pattern = re.compile("recipe\.hooks\.postbuild\.[0-9]\.pattern=\"{teensytools\.path}teensy_post_compile\"")
 	for line in lines:
 		if not pattern.match(line):
 			f.write(line)
