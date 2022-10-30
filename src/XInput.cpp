@@ -32,17 +32,17 @@
 		#warning "Non-XInput version selected in boards menu! Using debug print - board will not behave as an XInput device"
 	#endif
 
-// Teensy 3 Boards
+// Teensy Boards
 #elif defined(TEENSYDUINO)
-	// Teensy 3.1-3.2:  __MK20DX256__
-	// Teensy LC:       __MKL26Z64__
-	// Teensy 3.5:      __MK64FX512__
-	// Teensy 3.6:      __MK66FX1M0__
-        // Teensy 4.0-4.1   __IMXRT1062__
+	// Teensy 3.1-3.2:            __MK20DX256__
+	// Teensy LC:                 __MKL26Z64__
+	// Teensy 3.5:                __MK64FX512__
+	// Teensy 3.6:                __MK66FX1M0__
+	// Teensy 4.0, 4.1, MicroMod  __IMXRT1062__
 	#if  !defined(__MK20DX256__) && !defined(__MKL26Z64__) && \
 		 !defined(__MK64FX512__) && !defined(__MK66FX1M0__) && \
 		 !defined(__IMXRT1062__)
-		#warning "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, 3.6, or 4.0/4.1"
+		#warning "Not a supported board! Must use Teensy 3.1/3.2, LC, 3.5, 3.6, 4.0, 4.1, or MicroMod"
 	#elif !defined(USB_XINPUT)
 		#warning "USB type is not set to XInput in boards menu! Using debug print - board will not behave as an XInput device"
 	#endif /* if supported Teensy board */
