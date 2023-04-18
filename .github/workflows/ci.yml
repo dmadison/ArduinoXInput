@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   IDE_VERSION: 1.8.19
-  TEENSY_VERSION: 157
+  TEENSY_VERSION: 158
   IDE_LOCATION: /usr/local/share/arduino
 
 jobs:
