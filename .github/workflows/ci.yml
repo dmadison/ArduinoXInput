@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         board: ['Arduino Leonardo (Serial)', 'Arduino Leonardo (XInput)', 'Teensy 3.2', 'Teensy 4.0']
         include:
