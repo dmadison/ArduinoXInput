@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   IDE_VERSION: 1.8.19
-  TEENSY_VERSION: 158
+  TEENSY_VERSION: 159
   IDE_LOCATION: /usr/local/share/arduino
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Arduino IDE
         run: |
